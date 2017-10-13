@@ -1,390 +1,408 @@
-function dop() {
+window.Dop = function() {
     var my = this;
-    var jQuery = function () {
 
-    };
-    var arr = [];
-    var slice = arr.slice;
-    var concat = arr.concat;
-    var push = arr.push;
-    var indexOf = arr.indexOf;
-    var class2type = {};
-    var toString = class2type.toString;
-    var hasOwn = class2type.hasOwnProperty;
-    var trim = "".trim;
-    var support = {};
+    this.extendJQ = function () {
+        var that = this;
+        var jQuery = function () {
 
-    function isArraylike(obj) {
-        var length = obj.length,
-            type = jQuery.type(obj);
+        };
+        var arr = [];
+        var slice = arr.slice;
+        var concat = arr.concat;
+        var push = arr.push;
+        var indexOf = arr.indexOf;
+        var class2type = {};
+        var toString = class2type.toString;
+        var hasOwn = class2type.hasOwnProperty;
+        var trim = "".trim;
 
-        if (type === "function" || jQuery.isWindow(obj)) {
-            return false;
-        }
+        function isArraylike(obj) {
+            var length = obj.length,
+                type = jQuery.type(obj);
 
-        if (obj.nodeType === 1 && length) {
-            return true;
-        }
-
-        return type === "array" || length === 0 ||
-            typeof length === "number" && length > 0 && ( length - 1 ) in obj;
-    }
-
-    jQuery.fn = jQuery.prototype = {};
-
-    jQuery.extend = jQuery.fn.extend = function () {
-        var options, name, src, copy, copyIsArray, clone,
-            target = arguments[0] || {},
-            i = 1,
-            length = arguments.length,
-            deep = false;
-
-        // Handle a deep copy situation
-        if (typeof target === "boolean") {
-            deep = target;
-
-            // skip the boolean and the target
-            target = arguments[i] || {};
-            i++;
-        }
-
-        // Handle case when target is a string or something (possible in deep copy)
-        if (typeof target !== "object" && !jQuery.isFunction(target)) {
-            target = {};
-        }
-
-        // extend jQuery itself if only one argument is passed
-        if (i === length) {
-            target = this;
-            i--;
-        }
-
-        for (; i < length; i++) {
-            // Only deal with non-null/undefined values
-            if ((options = arguments[i]) != null) {
-                // Extend the base object
-                for (name in options) {
-                    src = target[name];
-                    copy = options[name];
-
-                    // Prevent never-ending loop
-                    if (target === copy) {
-                        continue;
-                    }
-
-                    // Recurse if we're merging plain objects or arrays
-                    if (deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) )) {
-                        if (copyIsArray) {
-                            copyIsArray = false;
-                            clone = src && jQuery.isArray(src) ? src : [];
-
-                        } else {
-                            clone = src && jQuery.isPlainObject(src) ? src : {};
-                        }
-
-                        // Never move original objects, clone them
-                        target[name] = jQuery.extend(deep, clone, copy);
-
-                        // Don't bring in undefined values
-                    } else if (copy !== undefined) {
-                        target[name] = copy;
-                    }
-                }
-            }
-        }
-
-        // Return the modified object
-        return target;
-    };
-
-    var jquery_fun = {
-
-        isReady: true,
-
-        error: function (msg) {
-            throw new Error(msg);
-        },
-
-        noop: function () {
-        },
-
-        // See test/unit/core.js for details concerning isFunction.
-        // Since version 1.3, DOM methods and functions like alert
-        // aren't supported. They return false on IE (#2968).
-        isFunction: function (obj) {
-            return typeof(obj) === "function";
-        },
-
-        isArray: Array.isArray,
-
-        isWindow: function (obj) {
-            return obj != null && obj === obj.window;
-        },
-
-        isNumeric: function (obj) {
-            // parseFloat NaNs numeric-cast false positives (null|true|false|"")
-            // ...but misinterprets leading-number strings, particularly hex literals ("0x...")
-            // subtraction forces infinities to NaN
-            return obj - parseFloat(obj) >= 0;
-        },
-
-        isPlainObject: function (obj) {
-            // Not plain objects:
-            // - Any object or value whose internal [[Class]] property is not "[object Object]"
-            // - DOM nodes
-            // - window
-            if (jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow(obj)) {
+            if (type === "function" || jQuery.isWindow(obj)) {
                 return false;
             }
 
-            // Support: Firefox <20
-            // The try/catch suppresses exceptions thrown when attempting to access
-            // the "constructor" property of certain host objects, ie. |window.location|
-            // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
-            try {
-                if (obj.constructor &&
-                    !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+            if (obj.nodeType === 1 && length) {
+                return true;
+            }
+
+            return type === "array" || length === 0 ||
+                typeof length === "number" && length > 0 && ( length - 1 ) in obj;
+        }
+
+        jQuery.fn = jQuery.prototype = {};
+
+        jQuery.extend = jQuery.fn.extend = function () {
+            var options, name, src, copy, copyIsArray, clone,
+                target = arguments[0] || {},
+                i = 1,
+                length = arguments.length,
+                deep = false;
+
+            // Handle a deep copy situation
+            if (typeof target === "boolean") {
+                deep = target;
+
+                // skip the boolean and the target
+                target = arguments[i] || {};
+                i++;
+            }
+
+            // Handle case when target is a string or something (possible in deep copy)
+            if (typeof target !== "object" && !jQuery.isFunction(target)) {
+                target = {};
+            }
+
+            // extend jQuery itself if only one argument is passed
+            if (i === length) {
+                target = this;
+                i--;
+            }
+
+            for (; i < length; i++) {
+                // Only deal with non-null/undefined values
+                if ((options = arguments[i]) != null) {
+                    // Extend the base object
+                    for (name in options) {
+                        src = target[name];
+                        copy = options[name];
+
+                        // Prevent never-ending loop
+                        if (target === copy) {
+                            continue;
+                        }
+
+                        // Recurse if we're merging plain objects or arrays
+                        if (deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) )) {
+                            if (copyIsArray) {
+                                copyIsArray = false;
+                                clone = src && jQuery.isArray(src) ? src : [];
+
+                            } else {
+                                clone = src && jQuery.isPlainObject(src) ? src : {};
+                            }
+
+                            // Never move original objects, clone them
+                            target[name] = jQuery.extend(deep, clone, copy);
+
+                            // Don't bring in undefined values
+                        } else if (copy !== undefined) {
+                            target[name] = copy;
+                        }
+                    }
+                }
+            }
+
+            // Return the modified object
+            return target;
+        };
+
+        var jquery_fun = {
+
+            isReady: true,
+
+            error: function (msg) {
+                throw new Error(msg);
+            },
+
+            noop: function () {
+            },
+
+            // 判断是否是个函数
+            isFunction: function (obj) {
+                return typeof(obj) === "function";
+            },
+
+            //判断是否是数组
+            isArray: Array.isArray,
+
+            //判断指定参数是否是一个窗口。
+            isWindow: function (obj) {
+                return obj != null && obj === obj.window;
+            },
+
+            //是否是数字类型或者字符串类型数字
+            isNumeric: function (obj) {
+                return obj - parseFloat(obj) >= 0;
+            },
+
+            //判断是否是一个纯粹的对象
+            isPlainObject: function (obj) {
+                // Not plain objects:
+                // - Any object or value whose internal [[Class]] property is not "[object Object]"
+                // - DOM nodes
+                // - window
+                if (jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow(obj)) {
                     return false;
                 }
-            } catch (e) {
-                return false;
-            }
 
-            // If the function hasn't returned already, we're confident that
-            // |obj| is a plain object, created by {} or constructed with new Object
-            return true;
-        },
-
-        isEmptyObject: function (obj) {
-            var name;
-            for (name in obj) {
-                return false;
-            }
-            return true;
-        },
-
-        type: function (obj) {
-            if (obj == null) {
-                return obj + "";
-            }
-            // Support: Android < 4.0, iOS < 6 (functionish RegExp)
-            return typeof obj === "object" || typeof obj === "function" ?
-                class2type[toString.call(obj)] || "object" :
-                typeof obj;
-        },
-
-        // Evaluates a script in a global context
-        globalEval: function (code) {
-            var script,
-                indirect = eval;
-
-            code = jQuery.trim(code);
-
-            if (code) {
-                // If the code includes a valid, prologue position
-                // strict mode pragma, execute code by injecting a
-                // script tag into the document.
-                if (code.indexOf("use strict") === 1) {
-                    script = document.createElement("script");
-                    script.text = code;
-                    document.head.appendChild(script).parentNode.removeChild(script);
-                } else {
-                    // Otherwise, avoid the DOM node creation, insertion
-                    // and removal by using an indirect global eval
-                    indirect(code);
-                }
-            }
-        },
-
-        // Convert dashed to camelCase; used by the css and data modules
-        // Microsoft forgot to hump their vendor prefix (#9572)
-        camelCase: function (string) {
-            return string.replace(rmsPrefix, "ms-").replace(rdashAlpha, fcamelCase);
-        },
-
-        nodeName: function (elem, name) {
-            return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
-        },
-
-        // args is for internal usage only
-        each: function (obj, callback, args) {
-            var value,
-                i = 0,
-                length = obj.length,
-                isArray = isArraylike(obj);
-
-            if (args) {
-                if (isArray) {
-                    for (; i < length; i++) {
-                        value = callback.apply(obj[i], args);
-
-                        if (value === false) {
-                            break;
-                        }
+                // Support: Firefox <20
+                // The try/catch suppresses exceptions thrown when attempting to access
+                // the "constructor" property of certain host objects, ie. |window.location|
+                // https://bugzilla.mozilla.org/show_bug.cgi?id=814622
+                try {
+                    if (obj.constructor &&
+                        !hasOwn.call(obj.constructor.prototype, "isPrototypeOf")) {
+                        return false;
                     }
-                } else {
-                    for (i in obj) {
-                        value = callback.apply(obj[i], args);
+                } catch (e) {
+                    return false;
+                }
 
-                        if (value === false) {
-                            break;
-                        }
+                // If the function hasn't returned already, we're confident that
+                // |obj| is a plain object, created by {} or constructed with new Object
+                return true;
+            },
+
+            //判断指定参数是否是一个空对象。
+            isEmptyObject: function (obj) {
+                var name;
+                for (name in obj) {
+                    return false;
+                }
+                return true;
+            },
+
+            //确定JavaScript内置对象的类型，并返回小写形式的类型名称
+            type: function (obj) {
+                if (obj == null) {
+                    return obj + "";
+                }
+                // Support: Android < 4.0, iOS < 6 (functionish RegExp)
+                return typeof obj === "object" || typeof obj === "function" ?
+                    class2type[toString.call(obj)] || "object" :
+                    typeof obj;
+            },
+
+            // 用于全局性地执行一段JavaScript代码。
+            globalEval: function (code) {
+                var script,
+                    indirect = eval;
+
+                code = jQuery.trim(code);
+
+                if (code) {
+                    // If the code includes a valid, prologue position
+                    // strict mode pragma, execute code by injecting a
+                    // script tag into the document.
+                    if (code.indexOf("use strict") === 1) {
+                        script = document.createElement("script");
+                        script.text = code;
+                        document.head.appendChild(script).parentNode.removeChild(script);
+                    } else {
+                        // Otherwise, avoid the DOM node creation, insertion
+                        // and removal by using an indirect global eval
+                        indirect(code);
                     }
                 }
+            },
 
-                // A special, fast, case for the most common use of each
-            } else {
-                if (isArray) {
-                    for (; i < length; i++) {
-                        value = callback.call(obj[i], i, obj[i]);
+            //判断传入的dom的nodeName是否和name匹配
+            nodeName: function (elem, name) {
+                return elem.nodeName && elem.nodeName.toLowerCase() === name.toLowerCase();
+            },
 
-                        if (value === false) {
-                            break;
+            // 函数用于遍历指定的对象和数组，并以对象的每个属性(或数组的每个成员)作为上下文来遍历执行指定的函数。
+            //object	Object类型指定需要遍历的对象或数组。callback(索引，值)	Function类型指定的用于循环执行的函数。
+            each: function (obj, callback, args) {
+                var value,
+                    i = 0,
+                    length = obj.length,
+                    isArray = isArraylike(obj);
+
+                if (args) {
+                    if (isArray) {
+                        for (; i < length; i++) {
+                            value = callback.apply(obj[i], args);
+
+                            if (value === false) {
+                                break;
+                            }
+                        }
+                    } else {
+                        for (i in obj) {
+                            value = callback.apply(obj[i], args);
+
+                            if (value === false) {
+                                break;
+                            }
                         }
                     }
-                } else {
-                    for (i in obj) {
-                        value = callback.call(obj[i], i, obj[i]);
 
-                        if (value === false) {
-                            break;
+                    // A special, fast, case for the most common use of each
+                } else {
+                    if (isArray) {
+                        for (; i < length; i++) {
+                            value = callback.call(obj[i], i, obj[i]);
+
+                            if (value === false) {
+                                break;
+                            }
+                        }
+                    } else {
+                        for (i in obj) {
+                            value = callback.call(obj[i], i, obj[i]);
+
+                            if (value === false) {
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            return obj;
-        },
+                return obj;
+            },
 
-        trim: function (text) {
-            return text == null ? "" : trim.call(text);
-        },
+            //去除字符串两端的空白字符。
+            trim: function (text) {
+                return text == null ? "" : trim.call(text);
+            },
 
-        // results is for internal usage only
-        makeArray: function (arr, results) {
-            var ret = results || [];
+            // 将一个类数组对象转换为真正的数组对象。
+            makeArray: function (arr, results) {
+                var ret = results || [];
 
-            if (arr != null) {
-                if (isArraylike(Object(arr))) {
-                    jQuery.merge(ret,
-                        typeof arr === "string" ?
-                            [arr] : arr
-                    );
-                } else {
-                    push.call(ret, arr);
+                if (arr != null) {
+                    if (isArraylike(Object(arr))) {
+                        jQuery.merge(ret,
+                            typeof arr === "string" ?
+                                [arr] : arr
+                        );
+                    } else {
+                        push.call(ret, arr);
+                    }
                 }
-            }
 
-            return ret;
-        },
+                return ret;
+            },
 
-        inArray: function (elem, arr, i) {
-            return arr == null ? -1 : indexOf.call(arr, elem, i);
-        },
+            //在数组中搜索指定的值，并返回其索引值。如果数组中不存在该值，则返回 -1。
+            inArray: function (elem, arr, i) {
+                return arr == null ? -1 : indexOf.call(arr, elem, i);
+            },
 
-        merge: function (first, second) {
-            var len = +second.length,
-                j = 0,
-                i = first.length;
+            //用于合并两个数组内容到第一个数组。
+            merge: function (first, second) {
+                var len = +second.length,
+                    j = 0,
+                    i = first.length;
 
-            for (; j < len; j++) {
-                first[i++] = second[j];
-            }
-
-            first.length = i;
-
-            return first;
-        },
-
-        grep: function (elems, callback, invert) {
-            var callbackInverse,
-                matches = [],
-                i = 0,
-                length = elems.length,
-                callbackExpect = !invert;
-
-            // Go through the array, only saving the items
-            // that pass the validator function
-            for (; i < length; i++) {
-                callbackInverse = !callback(elems[i], i);
-                if (callbackInverse !== callbackExpect) {
-                    matches.push(elems[i]);
+                for (; j < len; j++) {
+                    first[i++] = second[j];
                 }
-            }
 
-            return matches;
-        },
+                first.length = i;
 
-        // arg is for internal usage only
-        map: function (elems, callback, arg) {
-            var value,
-                i = 0,
-                length = elems.length,
-                isArray = isArraylike(elems),
-                ret = [];
+                return first;
+            },
 
-            // Go through the array, translating each of the items to their new values
-            if (isArray) {
+            /*作用：grep()使用指定的函数过滤数组中的元素，并返回过滤后的数组。
+            语法：grep(array,callback,invert)。
+            参数含义：
+            array：带过滤数组。
+            callback：数组过滤函数，该函数包含两个参数，第一个是当前数组元素的值
+            ，第二个是数组元素的下标，即元素索引值。
+            invert：布尔型可选项，默认为false，即返回的是过滤函数处理以后为true
+            的数组；选项设置为false的时候，返回的是过滤函数处理以后为false的数组
+            。*/
+            grep: function (elems, callback, invert) {
+                var callbackInverse,
+                    matches = [],
+                    i = 0,
+                    length = elems.length,
+                    callbackExpect = !invert;
+
+                // Go through the array, only saving the items
+                // that pass the validator function
                 for (; i < length; i++) {
-                    value = callback(elems[i], i, arg);
-
-                    if (value != null) {
-                        ret.push(value);
+                    callbackInverse = !callback(elems[i], i);
+                    if (callbackInverse !== callbackExpect) {
+                        matches.push(elems[i]);
                     }
                 }
 
-                // Go through every key on the object,
-            } else {
-                for (i in elems) {
-                    value = callback(elems[i], i, arg);
+                return matches;
+            },
 
-                    if (value != null) {
-                        ret.push(value);
+            // 使用指定函数处理数组中的每个元素(或对象的每个属性)，并将处理结果封装为新的数组返回。
+            map: function (elems, callback, arg) {
+                var value,
+                    i = 0,
+                    length = elems.length,
+                    isArray = isArraylike(elems),
+                    ret = [];
+
+                // Go through the array, translating each of the items to their new values
+                if (isArray) {
+                    for (; i < length; i++) {
+                        value = callback(elems[i], i, arg);
+
+                        if (value != null) {
+                            ret.push(value);
+                        }
+                    }
+
+                    // Go through every key on the object,
+                } else {
+                    for (i in elems) {
+                        value = callback(elems[i], i, arg);
+
+                        if (value != null) {
+                            ret.push(value);
+                        }
                     }
                 }
-            }
 
-            // Flatten any nested arrays
-            return concat.apply([], ret);
-        },
+                // Flatten any nested arrays
+                return concat.apply([], ret);
+            },
 
-        // A global GUID counter for objects
-        guid: 1,
+            // A global GUID counter for objects
+            guid: 1,
 
-        // Bind a function to a context, optionally partially applying any
-        // arguments.
-        proxy: function (fn, context) {
-            var tmp, args, proxy;
+            // 接受一个已有的函数，并返回一个带特定上下文的新的函数。
+            proxy: function (fn, context) {
+                var tmp, args, proxy;
 
-            if (typeof context === "string") {
-                tmp = fn[context];
-                context = fn;
-                fn = tmp;
-            }
+                if (typeof context === "string") {
+                    tmp = fn[context];
+                    context = fn;
+                    fn = tmp;
+                }
 
-            // Quick check to determine if target is callable, in the spec
-            // this throws a TypeError, but we will just return undefined.
-            if (!jQuery.isFunction(fn)) {
-                return undefined;
-            }
+                // Quick check to determine if target is callable, in the spec
+                // this throws a TypeError, but we will just return undefined.
+                if (!jQuery.isFunction(fn)) {
+                    return undefined;
+                }
 
-            // Simulated bind
-            args = slice.call(arguments, 2);
-            proxy = function () {
-                return fn.apply(context || this, args.concat(slice.call(arguments)));
-            };
+                // Simulated bind
+                args = slice.call(arguments, 2);
+                proxy = function () {
+                    return fn.apply(context || this, args.concat(slice.call(arguments)));
+                };
 
-            // Set the guid of unique handler to the same of original handler, so it can be removed
-            proxy.guid = fn.guid = fn.guid || jQuery.guid++;
+                // Set the guid of unique handler to the same of original handler, so it can be removed
+                proxy.guid = fn.guid = fn.guid || jQuery.guid++;
 
-            return proxy;
-        },
+                return proxy;
+            },
 
-        now: Date.now
+            //输出当前时间
+            now: Date.now
+        };
+        jQuery.extend(jquery_fun);
+
+        //添加到this上面
+        for(var i in jQuery){
+            that[i] = jQuery[i];
+        }
+        return jQuery;
     };
-    jQuery.extend(jquery_fun);
 
-    this.jquery = jQuery;
+    this.jquery = this.extendJQ();
 
     //添加移动端的触摸事件
     this.AddTouchFun = function () {
@@ -1219,8 +1237,8 @@ function dop() {
         //计算滑动的角度
         that.getAngle = function (px1, py1, px2, py2) {
             //两点的x、y值
-            x = px2 - px1;
-            y = py2 - py1;
+            var x = px2 - px1;
+            var y = py2 - py1;
             hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
             cos = x / hypotenuse;
@@ -1299,14 +1317,14 @@ function dop() {
             [].push.apply(touch_obj, dom);
         }
 
-        jQuery.extend(true, touch_obj, jquery_fun, touch_fun);
+        this.jquery.extend(true, touch_obj, this.jquery, touch_fun);
 
         return touch_obj;
     }
-}
+};
 
-dop.prototype = {
-    constructor: dop,
+Dop.prototype = {
+    constructor: Dop,
     //判断是什么媒体设备的浏览器
     browserRedirect: function () {
         var sUserAgent = navigator.userAgent.toLowerCase();
@@ -1448,6 +1466,60 @@ dop.prototype = {
         });
         img.addEventListener("mouseleave",function(){
             img.src = imgNormal.src;
+        });
+    },
+    //监听数组变化方法，(arr数组,callback回调函数)
+    listenArray:function (arr,callback) {
+    // 获取Array原型
+    const arrayProto = Array.prototype;
+    const arrayMethods = Object.create(arrayProto);
+    let newArrProto = [];
+
+    //设置一个延迟器，在循环设置数值的时候延迟触发callback
+    let timeout;
+
+    [
+        'push',
+        'pop',
+        'shift',
+        'unshift',
+        'splice',
+        'sort',
+        'reverse'
+    ].forEach(method => {
+        // 原生Array的原型方法
+        let original = arrayMethods[method];
+
+        // 将push，pop等方法重新封装并定义在对象newArrProto的属性上
+        // 这里需要注意的是封装好的方法是定义在newArrProto的属性上而不是其原型属性
+        // newArrProto.__proto__ 没有改变
+        newArrProto[method] = function () {
+            //console.log('监听到数组的变化啦！');
+
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                callback.call(arr);
+            },20);
+
+            // 调用对应的原生方法并返回结果（新数组长度）
+            return original.apply(this, arguments);
+        }
+    });
+
+    list.__proto__ = newArrProto;
+},
+    //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
+    listenObj:function (obj,key,callback) {
+        var old = obj[key];
+        Object.defineProperty(obj,key,{
+            set:function(val){
+                var oldVal = old;
+                old = val;
+                callback(val,oldVal,this);
+            },
+            get:function(){
+                return old;
+            }
         });
     }
 };

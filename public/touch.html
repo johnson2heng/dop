@@ -24,9 +24,9 @@
         <div style="width:400px; height:200px; background: red; margin:0 auto;"></div>
     </div>
 </body>
-<script src="js/index.js"></script>
+<script src="../app/main.js"></script>
 <script>
-    var myExtend = new dop();//首先实例化对象，获取到对象
+    var myExtend = new Dop();//首先实例化对象，获取到对象
     var dom = myExtend.touch(document.getElementById("div"));//通过获取到相关dom的对象
     //以下是案例，兼容ie9以上
     dom.on("tap",function () {
