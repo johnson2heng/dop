@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        #div{
+            margin:0 auto; height:400px; width:100%; background: greenyellow;
+        }
+    </style>
+</head>
+<body>
+    <div id="div">
+        <div style="width:400px; height:200px; background: red; margin:0 auto;"></div>
+    </div>
+</body>
+<script src="js/index.js"></script>
+<script>
+    var myExtend = new dop();//首先实例化对象，获取到对象
+    var dom = myExtend.touch(document.getElementById("div"));//通过获取到相关dom的对象
+    //以下是案例，兼容ie9以上
+    dom.on("tap",function () {
+        console.log("tap");
+    });
+    dom.on("singleTap",function () {
+        console.log("singleTap");
+    });
+    dom.on("doubleTap",function () {
+        console.log("doubleTap");
+    });
+    dom.on("swipe",function () {
+        console.log("swipe");
+    });
+    dom.on("longTap",function () {
+        console.log("longTap");
+    });
+    dom.on("swipeLeft",function () {
+        console.log("swipeLeft");
+    });
+    dom.on("swipeRight",function () {
+        console.log("swipeRight");
+    });
+    dom.on("swipeUp",function () {
+        console.log("swipeUp");
+    });
+    dom.on("swipeDown",function () {
+        console.log("swipeDown");
+    });
+    dom.on("wheel",function () {
+        console.log("向下滚动");
+    },function () {
+        console.log("向上滚动");
+    })
+</script>
+</html>
