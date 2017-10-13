@@ -823,14 +823,14 @@ window.Dop = function() {
         //计算滑动的角度
         that.getAngle = function (px1, py1, px2, py2) {
             //两点的x、y值
-            x = px2 - px1;
-            y = py2 - py1;
-            hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            let x = px2 - px1;
+            let y = py2 - py1;
+            let hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
-            cos = x / hypotenuse;
-            radian = Math.acos(cos);
+            let cos = x / hypotenuse;
+            let radian = Math.acos(cos);
             //求出弧度
-            angle = 180 / (Math.PI / radian);
+            let angle = 180 / (Math.PI / radian);
             //用弧度算出角度
             if (y < 0) {
                 angle = -angle;
@@ -1237,14 +1237,14 @@ window.Dop = function() {
         //计算滑动的角度
         that.getAngle = function (px1, py1, px2, py2) {
             //两点的x、y值
-            var x = px2 - px1;
-            var y = py2 - py1;
-            hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            let x = px2 - px1;
+            let y = py2 - py1;
+            let hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
-            cos = x / hypotenuse;
-            radian = Math.acos(cos);
+            let cos = x / hypotenuse;
+            let radian = Math.acos(cos);
             //求出弧度
-            angle = 180 / (Math.PI / radian);
+            let angle = 180 / (Math.PI / radian);
             //用弧度算出角度
             if (y < 0) {
                 angle = -angle;
@@ -1394,8 +1394,7 @@ Dop.prototype = {
     //获取浏览器的兼容性前缀
     getPrefix: function () {
         var temp = document.body;
-        var aPrefix = ["webkit", "Moz", "o", "ms"],
-            props = "";
+        var aPrefix = ["webkit", "Moz", "o", "ms"];
         for (var i in aPrefix) {
             props = aPrefix[i] + "Transition";
             if (temp.style[props] !== undefined) {
@@ -1412,7 +1411,7 @@ Dop.prototype = {
             } :
             function (obj) {
                 return obj && typeof obj === 'object' && obj.nodeType === 1 && typeof obj.nodeName === 'string';
-            }
+            };
         return is_Dom(dom);
     },
     //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
@@ -1499,15 +1498,14 @@ Dop.prototype = {
             clearTimeout(timeout);
             timeout = setTimeout(function () {
                 callback.call(arr);
-            },20);
 
-            // 调用对应的原生方法并返回结果（新数组长度）
-            return original.apply(this, arguments);
-        }
-    });
+                // 调用对应的原生方法并返回结果（新数组长度）
+                return original.apply(this, arguments);
+            }
+        });
 
-    list.__proto__ = newArrProto;
-},
+        arr.__proto__ = newArrProto;
+    },
     //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
     listenObj:function (obj,key,callback) {
         var old = obj[key];
@@ -1515,11 +1513,51 @@ Dop.prototype = {
             set:function(val){
                 var oldVal = old;
                 old = val;
-                callback(val,oldVal,this);
+                callback.call(obj,val,oldVal,this);
             },
             get:function(){
                 return old;
             }
         });
+    },
+    //深度监听所有的数组和对象的方法
+    watch:function (obj,callback) {
+        //封装一下回调函数，如果当前对象发生变动，则直接重新监听当前的对象
+        let timeout = null;
+        function newCallback() {
+            let that = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                watching(that,newCallback);
+                callback.call(that);
+            },10);
+        }
+
+        var watching = function (obj,callback) {
+            let that = this;
+            //首先判断obj的类型
+            if(that.type(obj) === "object" && !that.isDom(obj)){
+                if(that.isArray(obj)){
+                    for(let i=0,len=obj.length; i<len; i++){
+                        if(that.type(obj) === "object"){
+                            watching(obj[i],callback);
+                        }
+                        //给数组添加监听
+                        that.listenArray(obj,callback);
+                    }
+                }
+                else{
+                    for(let i in obj){
+                        if(that.type(obj) === "object"){
+                            watching(obj[i],callback);
+                        }
+                        //给当前对象添加监听
+                        that.listenObj(obj,i,callback);
+                    }
+                }
+            }
+        }.bind(this);
+
+        watching(obj,newCallback);
     }
 };

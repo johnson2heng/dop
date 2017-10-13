@@ -9,5 +9,18 @@
 <body>
 生成的文件在js文件内，压缩的文件为index.min.js，未压缩的为index.js。源文件为/app/main.js
 </body>
-<script src="../app/main.js"></script>
+<script src="js/index.js"></script>
+<script>
+    let dom = new Dop();
+    var obj = {
+        name:"zs",
+        arr:[1,2,3],
+        obj:{
+            objName:"child"
+        }
+    };
+    dom.watch(obj,function () {
+        console.log("深度测试成功",this);
+    });
+</script>
 </html>

@@ -840,14 +840,14 @@ window.Dop = function () {
         //计算滑动的角度
         that.getAngle = function (px1, py1, px2, py2) {
             //两点的x、y值
-            x = px2 - px1;
-            y = py2 - py1;
-            hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            var x = px2 - px1;
+            var y = py2 - py1;
+            var hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
-            cos = x / hypotenuse;
-            radian = Math.acos(cos);
+            var cos = x / hypotenuse;
+            var radian = Math.acos(cos);
             //求出弧度
-            angle = 180 / (Math.PI / radian);
+            var angle = 180 / (Math.PI / radian);
             //用弧度算出角度
             if (y < 0) {
                 angle = -angle;
@@ -1222,12 +1222,12 @@ window.Dop = function () {
             //两点的x、y值
             var x = px2 - px1;
             var y = py2 - py1;
-            hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            var hypotenuse = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             //斜边长度
-            cos = x / hypotenuse;
-            radian = Math.acos(cos);
+            var cos = x / hypotenuse;
+            var radian = Math.acos(cos);
             //求出弧度
-            angle = 180 / (Math.PI / radian);
+            var angle = 180 / (Math.PI / radian);
             //用弧度算出角度
             if (y < 0) {
                 angle = -angle;
@@ -1373,8 +1373,7 @@ Dop.prototype = {
     //获取浏览器的兼容性前缀
     getPrefix: function getPrefix() {
         var temp = document.body;
-        var aPrefix = ["webkit", "Moz", "o", "ms"],
-            props = "";
+        var aPrefix = ["webkit", "Moz", "o", "ms"];
         for (var i in aPrefix) {
             props = aPrefix[i] + "Transition";
             if (temp.style[props] !== undefined) {
@@ -1444,6 +1443,59 @@ Dop.prototype = {
         img.addEventListener("mouseleave", function () {
             img.src = imgNormal.src;
         });
+    },
+    //监听数组变化方法，(arr数组,callback回调函数)
+    listenArray: function listenArray(arr, callback) {
+        // 获取Array原型
+        var arrayProto = Array.prototype;
+        var arrayMethods = Object.create(arrayProto);
+        var newArrProto = [];
+
+        //设置一个延迟器，在循环设置数值的时候延迟触发callback
+        var timeout = void 0;
+
+        ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'].forEach(function (method) {
+            // 原生Array的原型方法
+            var original = arrayMethods[method];
+
+            // 将push，pop等方法重新封装并定义在对象newArrProto的属性上
+            // 这里需要注意的是封装好的方法是定义在newArrProto的属性上而不是其原型属性
+            // newArrProto.__proto__ 没有改变
+            newArrProto[method] = function () {
+                //console.log('监听到数组的变化啦！');
+
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
+                    callback.call(arr);
+                }, 20);
+
+                // 调用对应的原生方法并返回结果（新数组长度）
+                return original.apply(this, arguments);
+            };
+        });
+
+        list.__proto__ = newArrProto;
+    },
+    //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
+    listenObj: function listenObj(obj, key, callback) {
+        var old = obj[key];
+        Object.defineProperty(obj, key, {
+            set: function set(val) {
+                var oldVal = old;
+                old = val;
+                callback(val, oldVal, this);
+            },
+            get: function get() {
+                return old;
+            }
+        });
+    },
+    //深度监听所有的数组和对象的方法
+    watch: function watch(obj) {
+        var that = this;
+        console.log(that.type(obj));
+        //首先判断obj的类型
+        if (that.type(obj) === "object") {}
     }
 };
 
