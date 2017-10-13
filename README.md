@@ -7,11 +7,11 @@ Dynamic of package，里面封装了一些个人常用的方法，全兼容的do
 >使用：
 >首先实例化方法的对象，并且赋值变量
 ```
-var myExtend = new MyNeedExtend();
+var myExtend = new dop();
 ```
 >然后使用myExtend.touch()方法获取到绑定交互对象。
 ```
-var dom = myExtend.touch(document.getElementById("div"));//通过获取到相关dom的对象
+var dom = myExtend.$(document.getElementById("div"));//通过获取到相关dom的对象
 ```
 touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对象。
 >绑定事件，使用on方法绑定事件
