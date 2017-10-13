@@ -1469,34 +1469,29 @@ Dop.prototype = {
     },
     //监听数组变化方法，(arr数组,callback回调函数)
     listenArray:function (arr,callback) {
-    // 获取Array原型
-    const arrayProto = Array.prototype;
-    const arrayMethods = Object.create(arrayProto);
-    let newArrProto = [];
+        // 获取Array原型
+        const arrayProto = Array.prototype;
+        const arrayMethods = Object.create(arrayProto);
+        let newArrProto = [];
 
-    //设置一个延迟器，在循环设置数值的时候延迟触发callback
-    let timeout;
+        [
+            'push',
+            'pop',
+            'shift',
+            'unshift',
+            'splice',
+            'sort',
+            'reverse'
+        ].forEach(method => {
+            // 原生Array的原型方法
+            let original = arrayMethods[method];
 
-    [
-        'push',
-        'pop',
-        'shift',
-        'unshift',
-        'splice',
-        'sort',
-        'reverse'
-    ].forEach(method => {
-        // 原生Array的原型方法
-        let original = arrayMethods[method];
+            // 将push，pop等方法重新封装并定义在对象newArrProto的属性上
+            // 这里需要注意的是封装好的方法是定义在newArrProto的属性上而不是其原型属性
+            // newArrProto.__proto__ 没有改变
+            newArrProto[method] = function () {
+                //console.log('监听到数组的变化啦！');
 
-        // 将push，pop等方法重新封装并定义在对象newArrProto的属性上
-        // 这里需要注意的是封装好的方法是定义在newArrProto的属性上而不是其原型属性
-        // newArrProto.__proto__ 没有改变
-        newArrProto[method] = function () {
-            //console.log('监听到数组的变化啦！');
-
-            clearTimeout(timeout);
-            timeout = setTimeout(function () {
                 callback.call(arr);
 
                 // 调用对应的原生方法并返回结果（新数组长度）

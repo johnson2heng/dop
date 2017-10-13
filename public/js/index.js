@@ -1451,9 +1451,6 @@ Dop.prototype = {
         var arrayMethods = Object.create(arrayProto);
         var newArrProto = [];
 
-        //设置一个延迟器，在循环设置数值的时候延迟触发callback
-        var timeout = void 0;
-
         ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'].forEach(function (method) {
             // 原生Array的原型方法
             var original = arrayMethods[method];
@@ -1464,17 +1461,14 @@ Dop.prototype = {
             newArrProto[method] = function () {
                 //console.log('监听到数组的变化啦！');
 
-                clearTimeout(timeout);
-                timeout = setTimeout(function () {
-                    callback.call(arr);
-                }, 20);
+                callback.call(arr);
 
                 // 调用对应的原生方法并返回结果（新数组长度）
                 return original.apply(this, arguments);
             };
         });
 
-        list.__proto__ = newArrProto;
+        arr.__proto__ = newArrProto;
     },
     //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
     listenObj: function listenObj(obj, key, callback) {
@@ -1483,7 +1477,7 @@ Dop.prototype = {
             set: function set(val) {
                 var oldVal = old;
                 old = val;
-                callback(val, oldVal, this);
+                callback.call(obj, val, oldVal, this);
             },
             get: function get() {
                 return old;
@@ -1491,11 +1485,43 @@ Dop.prototype = {
         });
     },
     //深度监听所有的数组和对象的方法
-    watch: function watch(obj) {
-        var that = this;
-        console.log(that.type(obj));
-        //首先判断obj的类型
-        if (that.type(obj) === "object") {}
+    watch: function watch(obj, callback) {
+        //封装一下回调函数，如果当前对象发生变动，则直接重新监听当前的对象
+        var timeout = null;
+        function newCallback() {
+            var that = this;
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                watching(that, newCallback);
+                callback.call(that);
+            }, 10);
+        }
+
+        var watching = function (obj, callback) {
+            var that = this;
+            //首先判断obj的类型
+            if (that.type(obj) === "object" && !that.isDom(obj)) {
+                if (that.isArray(obj)) {
+                    for (var i = 0, len = obj.length; i < len; i++) {
+                        if (that.type(obj) === "object") {
+                            watching(obj[i], callback);
+                        }
+                        //给数组添加监听
+                        that.listenArray(obj, callback);
+                    }
+                } else {
+                    for (var _i in obj) {
+                        if (that.type(obj) === "object") {
+                            watching(obj[_i], callback);
+                        }
+                        //给当前对象添加监听
+                        that.listenObj(obj, _i, callback);
+                    }
+                }
+            }
+        }.bind(this);
+
+        watching(obj, newCallback);
     }
 };
 
