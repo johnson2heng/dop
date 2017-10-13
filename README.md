@@ -54,3 +54,6 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
 - Dop.prototype.isDom() //判断是否是一个dom对象
 - Dop.prototype.wheel() //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
 - Dop.prototype.addImageHover() //给img对象添加悬停效果
+- Dop.prototype.listenArray() //监听数组变化方法，(arr数组,callback回调函数)
+- Dop.prototype.listenObj() //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
+- Dop.prototype.watch() //深度监听所有的数组和对象的方法
