@@ -5,7 +5,7 @@ module.exports = {
     entry: __dirname + "/app/main.js",//已多次提及的唯一入口文件
     output: {
         path: __dirname + "/public/",//打包后的文件存放的地方
-        filename: "js/index.js"//打包后输出文件的文件名
+        filename: "js/index.min.js"//打包后输出文件的文件名
     },
 
     //以下是服务环境配置
@@ -15,14 +15,14 @@ module.exports = {
         inline: true//实时刷新
     },
 
-    /*plugins: [
+    plugins: [
         //压缩代码
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false
             }
         })
-    ],*/
+    ],
 
     module: {
         loaders: [
