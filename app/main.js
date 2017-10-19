@@ -1393,10 +1393,10 @@ Dop.prototype = {
     },
     //获取浏览器的兼容性前缀
     getPrefix: function () {
-        var temp = document.body;
-        var aPrefix = ["webkit", "Moz", "o", "ms"];
-        for (var i in aPrefix) {
-            props = aPrefix[i] + "Transition";
+        let temp = document.body;
+        let aPrefix = ["webkit", "Moz", "o", "ms"];
+        for (let i in aPrefix) {
+            let props = aPrefix[i] + "Transition";
             if (temp.style[props] !== undefined) {
                 return "-" + aPrefix[i].toLowerCase() + "-";
             }
@@ -1534,12 +1534,15 @@ Dop.prototype = {
             if(that.type(obj) === "object" && !that.isDom(obj)){
                 if(that.isArray(obj)){
                     for(let i=0,len=obj.length; i<len; i++){
+                        //给每个数组的子项增加监听
+                        that.listenObj(obj,i,callback);
+                        //如果子项是对象，给子项内的值增加监听
                         if(that.type(obj) === "object"){
                             watching(obj[i],callback);
                         }
-                        //给数组添加监听
-                        that.listenArray(obj,callback);
                     }
+                    //给数组添加监听
+                    that.listenArray(obj,callback);
                 }
                 else{
                     for(let i in obj){

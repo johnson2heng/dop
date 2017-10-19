@@ -1375,7 +1375,7 @@ Dop.prototype = {
         var temp = document.body;
         var aPrefix = ["webkit", "Moz", "o", "ms"];
         for (var i in aPrefix) {
-            props = aPrefix[i] + "Transition";
+            var props = aPrefix[i] + "Transition";
             if (temp.style[props] !== undefined) {
                 return "-" + aPrefix[i].toLowerCase() + "-";
             }
@@ -1503,12 +1503,15 @@ Dop.prototype = {
             if (that.type(obj) === "object" && !that.isDom(obj)) {
                 if (that.isArray(obj)) {
                     for (var i = 0, len = obj.length; i < len; i++) {
+                        //给每个数组的子项增加监听
+                        that.listenObj(obj, i, callback);
+                        //如果子项是对象，给子项内的值增加监听
                         if (that.type(obj) === "object") {
                             watching(obj[i], callback);
                         }
-                        //给数组添加监听
-                        that.listenArray(obj, callback);
                     }
+                    //给数组添加监听
+                    that.listenArray(obj, callback);
                 } else {
                     for (var _i in obj) {
                         if (that.type(obj) === "object") {
