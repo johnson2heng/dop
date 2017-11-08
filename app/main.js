@@ -460,7 +460,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.tap.startTime = Number(new Date());
                 that.tap.start = [];
                 var len = e.targetTouches.length;
@@ -505,7 +504,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.singleTap.startTime = Number(new Date());
                 that.singleTap.start = [];
 
@@ -558,7 +556,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.doubleTap.startTime = Number(new Date());
                 that.doubleTap.start = [];
                 var len = e.targetTouches.length;
@@ -581,7 +578,6 @@ window.Dop = function() {
             var currentTarget;
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.longTap.startTime = Number(new Date());
                 that.longTap.start = my.jquery.extend(true, {}, e.targetTouches[0]);
                 that.longTap.move = null;
@@ -637,7 +633,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
                 var len = e.targetTouches.length;
@@ -678,7 +673,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
                 var len = e.targetTouches.length;
@@ -719,7 +713,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
                 var len = e.targetTouches.length;
@@ -760,7 +753,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
                 var len = e.targetTouches.length;
@@ -801,7 +793,6 @@ window.Dop = function() {
             //设置手指触发事件
             var touchstart = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
                 var len = e.targetTouches.length;
@@ -903,7 +894,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
@@ -938,7 +928,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.singleTap.startTime = Number(new Date());
                 that.singleTap.start = my.jquery.extend(true, {}, e);
 
@@ -983,7 +972,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.doubleTap.startTime = Number(new Date());
                 that.doubleTap.start = my.jquery.extend(true, {}, e);
 
@@ -999,7 +987,6 @@ window.Dop = function() {
             var currentTarget;
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.longTap.startTime = Number(new Date());
                 that.longTap.start = my.jquery.extend(true, {}, e);
                 that.longTap.move = null;
@@ -1023,7 +1010,6 @@ window.Dop = function() {
 
             var mouseMove = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.longTap.move = my.jquery.extend(true, {}, e);
             };
 
@@ -1054,7 +1040,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
@@ -1086,7 +1071,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
@@ -1118,7 +1102,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
@@ -1150,7 +1133,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
@@ -1182,7 +1164,6 @@ window.Dop = function() {
             //设置手指触发事件
             var mouseDown = function (event) {
                 var e = event || window.event;
-                e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 

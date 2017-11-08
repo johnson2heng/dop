@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="div">
-        <div style="width:400px; height:200px; background: red; margin:0 auto;"></div>
+        <div style="width:400px; height:200px; background: red; margin:0 auto;" ></div>
     </div>
 </body>
 <script src="js/dop.min.js"></script>
@@ -31,6 +31,7 @@
     //以下是案例，兼容ie9以上
     dom.on("tap",function () {
         console.log("tap");
+        alert("tap");
     });
     dom.on("singleTap",function () {
         console.log("singleTap");
@@ -40,6 +41,7 @@
     });
     dom.on("swipe",function () {
         console.log("swipe");
+        alert("swipe");
     });
     dom.on("longTap",function () {
         console.log("longTap");
@@ -60,6 +62,6 @@
         console.log("向下滚动");
     },function () {
         console.log("向上滚动");
-    })
+    });
 </script>
 </html>
