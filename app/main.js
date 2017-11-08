@@ -1332,6 +1332,13 @@ Dop.prototype = {
             return "pc";
         }
     },
+    //使用js获取get传值
+    getQueryString:function (name) {
+        let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        let r = window.location.search.substr(1).match(reg);
+        if (r != null) return decodeURI(r[2]);
+        return null;
+    },
     //深拷贝和浅拷贝(设置,对象，深/浅)
     cloneObj: function (settings, obj, boolean) {
         var bool = boolean || false;
