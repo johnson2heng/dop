@@ -1545,5 +1545,9 @@ Dop.prototype = {
         }.bind(this);
 
         watching(obj,newCallback);
+    },
+    //计算两个点之间的距离的方法
+    getRange:function (px1, py1, px2, py2) {
+        return Math.sqrt(Math.pow(Math.abs(px1 - px2), 2) + Math.pow(Math.abs(py1 - py2), 2));
     }
 };

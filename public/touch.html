@@ -27,6 +27,7 @@
 <script src="js/dop.min.js"></script>
 <script>
     var myExtend = new Dop();//首先实例化对象，获取到对象
+    console.log(myExtend.getQueryString);
     var dom = myExtend.touch(document.getElementById("div"));//通过获取到相关dom的对象
     //以下是案例，兼容ie9以上
     dom.on("tap",function () {
