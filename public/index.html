@@ -11,7 +11,7 @@
 </body>
 <script src="js/dop.min.js"></script>
 <script>
-    let dom = new Dop();
+    let dop = new Dop();
     var obj = {
         name:"zs",
         arr:[1,2,3],
@@ -19,8 +19,15 @@
             objName:"child"
         }
     };
-    dom.watch(obj,function () {
+    dop.watch(obj,function () {
         console.log("深度测试成功",this);
     });
+
+    let div = document.createElement("div");
+    div.style.cssText = "width:100px; height:100px; background:red;";
+    document.body.appendChild(div);
+    dop.setTransformStyle(div,"rotate(30deg) translate(1px, 2px) scale(2,3) skew(20deg, 30deg)");
+
+    console.log(dop.getTransformStyle(document.body));
 </script>
 </html>

@@ -1,5 +1,51 @@
 window.Dop = function() {
-    var my = this;
+    let my = this;
+
+    //增加专用的交互事件
+    let touch_fun = {
+        click: function (fun) {
+            return this.each(this, function (index, dom) {
+                if (my.browserRedirect() === "pc") {
+                    new my.AddComputerFun().init(dom, fun, "tap");
+                } else {
+                    new my.AddTouchFun().init(dom, fun, "tap");
+                }
+            });
+        },
+        tap: function (fun) {
+            return this.each(this, function (index, dom) {
+                if (my.browserRedirect() === "pc") {
+                    new my.AddComputerFun().init(dom, fun, "tap");
+                }
+                else {
+                    new my.AddTouchFun().init(dom, fun, "tap");
+                }
+            });
+        },
+        swipe: function (fun) {
+            return this.each(this, function (index, dom) {
+
+            });
+        },
+        on: function (event, fun,fun2) {
+            //fun2 兼容鼠标滚动事件第二个事件
+            return this.each(this, function (index, dom) {
+                if (my.browserRedirect() === "pc") {
+                    new my.AddComputerFun().init(dom, fun, event ,fun2);
+                }
+                else {
+                    new my.AddTouchFun().init(dom, fun, event);
+                }
+            });
+        },
+        all:function(event, fun,fun2){
+            //给dom绑定pc事件和移动端事件
+            return this.each(this, function (index, dom) {
+                new my.AddComputerFun().init(dom, fun, event ,fun2); //pc事件
+                new my.AddTouchFun().init(dom, fun, event); //移动端事件
+            });
+        }
+    };
 
     this.extendJQ = function () {
         var that = this;
@@ -1241,52 +1287,6 @@ window.Dop = function() {
         };
     };
 
-    //增加专用的交互事件
-    var touch_fun = {
-        click: function (fun) {
-            return this.each(this, function (index, dom) {
-                if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, "tap");
-                } else {
-                    new my.AddTouchFun().init(dom, fun, "tap");
-                }
-            });
-        },
-        tap: function (fun) {
-            return this.each(this, function (index, dom) {
-                if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, "tap");
-                }
-                else {
-                    new my.AddTouchFun().init(dom, fun, "tap");
-                }
-            });
-        },
-        swipe: function (fun) {
-            return this.each(this, function (index, dom) {
-
-            });
-        },
-        on: function (event, fun,fun2) {
-            //fun2 兼容鼠标滚动事件第二个事件
-            return this.each(this, function (index, dom) {
-                if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, event ,fun2);
-                }
-                else {
-                    new my.AddTouchFun().init(dom, fun, event);
-                }
-            });
-        },
-        all:function(event, fun,fun2){
-            //给dom绑定pc事件和移动端事件
-            return this.each(this, function (index, dom) {
-                new my.AddComputerFun().init(dom, fun, event ,fun2); //pc事件
-                new my.AddTouchFun().init(dom, fun, event); //移动端事件
-            });
-        }
-    };
-
     //生成类似于jq的类数组对象
     this.touch = this.$ = function (dom) {
         var touch_obj = new Object();
@@ -1549,5 +1549,69 @@ Dop.prototype = {
     //计算两个点之间的距离的方法
     getRange:function (px1, py1, px2, py2) {
         return Math.sqrt(Math.pow(Math.abs(px1 - px2), 2) + Math.pow(Math.abs(py1 - py2), 2));
+    },
+    //获取dom对象的transform的相关属性的值
+    getTransformStyle(dom){
+        let that = this;
+        //获取实际的dom的transform属性
+        let style = dom.style.cssText;
+        //从里面获取相关属性
+        let translate = style.match(/translate\((\S*)px,\s(\S*)px\)/);
+        let scale = style.match(/scale\((\S*),\s(\S*)\)/);
+        let rotate = style.match(/rotate\((\S*)deg\)/);
+        let skew = style.match(/skew\((\S*)deg,\s(\S*)deg\)/);
+
+        //声明一个返回的对象
+        let obj = {};
+
+        if(translate){
+            obj.translate = {
+                translateX:translate[1],
+                translateY:translate[2]
+            }
+        }
+
+        if(scale){
+            obj.scale = {
+                scaleX:scale[1],
+                scaleY:scale[2]
+            }
+        }
+
+        if(rotate){
+            obj.rotate = rotate[1];
+        }
+
+        if(skew){
+            obj.skew = {
+                skewX:skew[1],
+                skewY:skew[2]
+            }
+        }
+
+        return obj;
+    },
+    //兼容性的设置dom的transform属性
+    setTransformStyle(dom,style){
+        let that = this;
+        let prefix = that.getPrefix();
+
+        switch (prefix){
+            case "-webkit-":
+                dom.style.webkitTransform = style;
+                break;
+            case "-Moz-":
+                dom.style.MozTransform = style;
+                break;
+            case "-o-":
+                dom.style.OTransform = style;
+                break;
+            case "-ms-":
+                dom.style.msTransform = style;
+                break;
+            default:
+                dom.style.transform = style;
+                break;
+        }
     }
 };
