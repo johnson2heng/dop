@@ -67,4 +67,22 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
 
 ### 20180109 更新
 > 增加取消默认状态，代码案例
+```
+    let dop = new Dop();//首先实例化对象，获取到对象
+    let dom = dop.$(document.getElementById("div"));//通过获取到相关dom的对象
+    //阻止拖拽的默认
+    dom.on("swipe",function () {
+        console.log("swipe");
+    },true); 
+    
+    //阻止滚动事件的默认
+    dom.on("wheel",function () {
+        console.log("向下滚动");
+    },function () {
+        console.log("向上滚动");
+    },true);
+```
+
+> 增加Dop的图片显示插件，一个是仿微信图片查看，另一个是单个图片增加额外元素。
+文件地址`./public/js/dop_extend.js`,使用方式，在dop文件引入下方直接引入即可。
 
