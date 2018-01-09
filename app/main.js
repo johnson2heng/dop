@@ -27,19 +27,36 @@ window.Dop = function() {
         on: function (event, fun, fun2, preventDefault) {
             //fun2 兼容鼠标滚动事件第二个事件
             return this.each(this, function (index, dom) {
-                if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//pc事件
+                //判断当前第三个值的类型
+                if(typeof(fun2) === "function"){
+                    if (my.browserRedirect() === "pc") {
+                        new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//pc事件
+                    }
+                    else  {
+                        new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//移动端事件
+                    }
                 }
-                else  {
-                    new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//移动端事件
+                else{
+                    if (my.browserRedirect() === "pc") {
+                        new my.AddComputerFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2});//pc事件
+                    }
+                    else  {
+                        new my.AddTouchFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2});//移动端事件
+                    }
                 }
             });
         },
         all:function(event, fun, fun2, preventDefault){
             //给dom绑定pc事件和移动端事件
             return this.each(this, function (index, dom) {
-                new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //pc事件
-                new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //移动端事件
+                if(typeof(fun2) === "function"){
+                    new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //pc事件
+                    new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //移动端事件
+                }
+                else{
+                    new my.AddComputerFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2}); //pc事件
+                    new my.AddTouchFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2}); //移动端事件
+                }
             });
         }
     };
