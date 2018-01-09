@@ -1102,7 +1102,7 @@ window.Dop = function() {
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
-                        that.getRange(that.longTap.start.clientX,that.longTap.start.clientY,that.longTap.end.clientX,that.longTap.end.clientY) < that.settings.scrollSupressionThreshold) {
+                        that.getRange(that.longTap.start.clientX,that.longTap.start.clientY,that.longTap.move.clientX,that.longTap.move.clientY) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
                         that.callback.call(that.dom, currentTarget);
                     }
