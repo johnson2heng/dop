@@ -1,33 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="renderer" content="webkit">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        #div{
+            margin:0 auto; height:400px; width:100%; background: greenyellow;
+        }
+    </style>
 </head>
 <body>
-生成的文件在/public/js/文件内，压缩的文件为dop.min.js，未压缩的为dop.js。源文件为/app/main.js
+生成的文件在/public/js/文件内，压缩的文件为dop.min.js。源文件为/app/main.js
+<div id="div">
+    <div style="width:400px; height:200px; background: red; margin:0 auto;" ></div>
+</div>
 </body>
 <script src="js/dop.min.js"></script>
 <script>
-    let dop = new Dop();
-    var obj = {
-        name:"zs",
-        arr:[1,2,3],
-        obj:{
-            objName:"child"
-        }
-    };
-    dop.watch(obj,function () {
-        console.log("深度测试成功",this);
+    let dop = new Dop();//首先实例化对象，获取到对象
+    let dom = dop.$(document.getElementById("div"));//通过获取到相关dom的对象
+    //以下是案例，兼容ie9以上
+    dom.on("tap",function () {
+        console.log("tap");
+        //alert("tap");
     });
-
-    let div = document.createElement("div");
-    div.style.cssText = "width:100px; height:100px; background:red;";
-    document.body.appendChild(div);
-    dop.setTransformStyle(div,"rotate(30deg) translate(1px, 2px) scale(2,3) skew(20deg, 30deg)");
-
-    console.log(dop.getTransformStyle(document.body));
+    dom.on("singleTap",function () {
+        console.log("singleTap");
+    });
+    dom.on("doubleTap",function () {
+        console.log("doubleTap");
+    });
+    dom.on("swipe",function () {
+        console.log("swipe");
+        //alert("swipe");
+    });
+    dom.on("longTap",function () {
+        console.log("longTap");
+    });
+    dom.on("swipeLeft",function () {
+        console.log("swipeLeft");
+    });
+    dom.on("swipeRight",function () {
+        console.log("swipeRight");
+    });
+    dom.on("swipeUp",function () {
+        console.log("swipeUp");
+    });
+    dom.on("swipeDown",function () {
+        console.log("swipeDown");
+    });
+    dom.on("wheel",function () {
+        console.log("向下滚动");
+    },function () {
+        console.log("向上滚动");
+    });
 </script>
 </html>

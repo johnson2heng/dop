@@ -3,46 +3,43 @@ window.Dop = function() {
 
     //增加专用的交互事件
     let touch_fun = {
-        click: function (fun) {
+        tap: function (fun, preventDefault) {
             return this.each(this, function (index, dom) {
                 if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, "tap");
-                } else {
-                    new my.AddTouchFun().init(dom, fun, "tap");
-                }
-            });
-        },
-        tap: function (fun) {
-            return this.each(this, function (index, dom) {
-                if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, "tap");
+
+                    new my.AddComputerFun().init({dom:dom,fun:fun,event:"tap",preventDefault:preventDefault});//pc事件
                 }
                 else {
-                    new my.AddTouchFun().init(dom, fun, "tap");
+                    new my.AddTouchFun().init({dom:dom,fun:fun,event:"tap",preventDefault:preventDefault});//移动端事件
                 }
             });
         },
-        swipe: function (fun) {
+        swipe: function (fun, preventDefault) {
             return this.each(this, function (index, dom) {
-
+                if (my.browserRedirect() === "pc") {
+                    new my.AddComputerFun().init({dom:dom,fun:fun,event:"swipe",preventDefault:preventDefault});//pc事件
+                }
+                else {
+                    new my.AddTouchFun().init({dom:dom,fun:fun,event:"swipe",preventDefault:preventDefault});//移动端事件
+                }
             });
         },
-        on: function (event, fun,fun2) {
+        on: function (event, fun, fun2, preventDefault) {
             //fun2 兼容鼠标滚动事件第二个事件
             return this.each(this, function (index, dom) {
                 if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init(dom, fun, event ,fun2);
+                    new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//pc事件
                 }
-                else {
-                    new my.AddTouchFun().init(dom, fun, event);
+                else  {
+                    new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//移动端事件
                 }
             });
         },
-        all:function(event, fun,fun2){
+        all:function(event, fun, fun2, preventDefault){
             //给dom绑定pc事件和移动端事件
             return this.each(this, function (index, dom) {
-                new my.AddComputerFun().init(dom, fun, event ,fun2); //pc事件
-                new my.AddTouchFun().init(dom, fun, event); //移动端事件
+                new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //pc事件
+                new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //移动端事件
             });
         }
     };
@@ -452,19 +449,19 @@ window.Dop = function() {
 
     //添加移动端的触摸事件
     this.AddTouchFun = function () {
-        var that = this;
+        let that = this;
         //默认的配置选项
         that.settings = {
             tapDurationThreshold: 250,//触屏大于这个时间不当作tap
-            scrollSupressionThreshold: 3,//触发touchmove的敏感度
+            scrollSupressionThreshold: 20,//触发touchmove的敏感度
             swipeDurationThreshold: 750,//大于这个时间不当作swipe
-            horizontalDistanceThreshold: 30,//swipe的触发垂直方向move必须小于这个距离
+            horizontalDistanceThreshold: 40,//swipe的触发垂直方向move必须小于这个距离
             verticalDistanceThreshold: 75,//swipe的触发水平方向move必须大于这个距离
             tapHoldDurationThreshold: 750,//长按触发事件需要长按这个事件才可触发
             doubleTapInterval: 250//双击事件触发中间的间隔必须小于这个时间
         };
 
-        that.init = function (dom, callback, fun) {
+        that.init = function (obj) {
             //时间存储
             that.date = {};
             //所有的可以触发的事件数组
@@ -473,23 +470,23 @@ window.Dop = function() {
             that.touch = {};
 
             //将传入的dom和回调函数存到对象当中
-            that.dom = dom;
-            that.callback = callback;
+            that.dom = obj.dom;
+            that.callback = obj.fun;
 
-            var arr = fun.split(",");
-            for (var i = 0; i < arr.length; i++) {
+            let arr = obj.event.split(",");
+            for (let i = 0; i < arr.length; i++) {
                 //监听事件
                 if (that.arr.indexOf(arr[i]) != -1) {
-                    that[arr[i]]();
+                    that[arr[i]](obj.preventDefault);
                 }
             }
 
         };
 
-        that.tap = function () {
-            var currentTarget;
-            var touchend = function (event) {
-                var e = event || window.event;
+        that.tap = function (bool) {
+            let currentTarget;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.tap.end = e.changedTouches;
                 that.tap.endTime = Number(new Date());
                 if (
@@ -504,16 +501,15 @@ window.Dop = function() {
                 document.removeEventListener("touchend", touchend);
             };
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.tap.startTime = Number(new Date());
                 that.tap.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.tap.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.tap.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -522,13 +518,16 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.touchTap = touchstart;
         };
 
-        that.singleTap = function () {
-            var currentTarget;
+        that.singleTap = function (bool) {
+            let currentTarget;
             that.singleTap.timeOut = null;//预防与双击冲突的延迟器
             that.singleTap.type = false;//是否双击的标记
-            var touchend = function (event) {
+            let touchend = function (event) {
                 var e = event || window.event;
                 that.singleTap.end = e.changedTouches;
                 that.singleTap.endTime = Number(new Date());
@@ -548,8 +547,9 @@ window.Dop = function() {
             };
 
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.singleTap.startTime = Number(new Date());
                 that.singleTap.start = [];
 
@@ -559,28 +559,30 @@ window.Dop = function() {
                 if (that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval) {
                     clearTimeout(that.singleTap.timeOut);
                     that.singleTap.type = true;
-                } else {
+                }
+                else {
                     that.singleTap.type = false;
                 }
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.singleTap.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.singleTap.start.push(obj);
                 }
 
                 document.addEventListener("touchend", touchend);
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.singleTouchTap = touchstart;
         };
 
-        that.doubleTap = function () {
-            var currentTarget;
+        that.doubleTap = function (bool) {
+            let currentTarget;
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
-            var touchend = function (event) {
-                var e = event || window.event;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.doubleTap.end = e.changedTouches;
                 that.doubleTap.endTime = Number(new Date());
                 if (
@@ -600,16 +602,15 @@ window.Dop = function() {
 
             };
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.doubleTap.startTime = Number(new Date());
                 that.doubleTap.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.doubleTap.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.doubleTap.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -618,12 +619,16 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.doubleTouchTap = touchstart;
         };
 
-        that.longTap = function () {
-            var currentTarget;
-            var mouseDown = function (event) {
-                var e = event || window.event;
+        that.longTap = function (bool) {
+            let currentTarget;
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.longTap.startTime = Number(new Date());
                 that.longTap.start = my.jquery.extend(true, {}, e.targetTouches[0]);
                 that.longTap.move = null;
@@ -633,10 +638,11 @@ window.Dop = function() {
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
-                        Math.sqrt(Math.pow(Math.abs(that.longTap.start.clientX - that.longTap.move.clientX), 2) + Math.pow(Math.abs(that.longTap.start.clientY - that.longTap.move.clientY), 2)) < that.settings.scrollSupressionThreshold) {
+                            that.getRange(that.longTap.start.clientX, that.longTap.start.clientY, that.longTap.move.clientX, that.longTap.move.clientY)  < that.settings.scrollSupressionThreshold) {
                         mouseUp();
                         that.callback.call(that.dom, currentTarget);
-                    } else {
+                    }
+                    else {
                         mouseUp();
                     }
                 }, that.settings.tapHoldDurationThreshold);
@@ -645,48 +651,51 @@ window.Dop = function() {
                 document.addEventListener("touchend", mouseUp);
             };
 
-            var mouseMove = function (event) {
-                var e = event || window.event;
+            let mouseMove = function (event) {
+                let e = event || window.event;
                 that.longTap.move = my.jquery.extend(true, {}, e.targetTouches[0]);
             };
 
-            var mouseUp = function () {
+            let mouseUp = function () {
                 clearTimeout(that.longTap.timeOut);
                 document.removeEventListener("touchmove", mouseMove);
                 document.removeEventListener("touchend", mouseUp);
             };
 
             that.dom.addEventListener("touchstart", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.longTouchTap = mouseDown;
         };
 
-        that.swipe = function () {
-            var currentTarget;
-            var touchend = function (event) {
-                var e = event || window.event;
+        that.swipe = function (bool) {
+            let currentTarget;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.touch.end = e.changedTouches;
                 that.date.end = Number(new Date());
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.touch.start.length === 1) &&
                     (that.touch.end.length === 1) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.touch.start[0].clientX - that.touch.end[0].clientX), 2) + Math.pow(Math.abs(that.touch.start[0].clientY - that.touch.end[0].clientY), 2)) > that.settings.horizontalDistanceThreshold)
+                    that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY)  > that.settings.horizontalDistanceThreshold
                 ) {
                     that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("touchend", touchend);
             };
+
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.touch.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -695,12 +704,15 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.touchSwipe = touchstart;
         };
 
-        that.swipeLeft = function () {
-            var currentTarget;
-            var touchend = function (event) {
-                var e = event || window.event;
+        that.swipeLeft = function (bool) {
+            let currentTarget;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.touch.end = e.changedTouches;
                 that.date.end = Number(new Date());
                 if (
@@ -717,16 +729,15 @@ window.Dop = function() {
                 document.removeEventListener("touchend", touchend);
             };
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.touch.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -735,12 +746,15 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.touchSwipeLeft = touchstart;
         };
 
-        that.swipeRight = function () {
-            var currentTarget;
-            var touchend = function (event) {
-                var e = event || window.event;
+        that.swipeRight = function (bool) {
+            let currentTarget;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.touch.end = e.changedTouches;
                 that.date.end = Number(new Date());
                 if (
@@ -757,16 +771,15 @@ window.Dop = function() {
                 document.removeEventListener("touchend", touchend);
             };
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.touch.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -775,12 +788,15 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.touchSwipeRight = touchstart;
         };
 
-        that.swipeUp = function () {
-            var currentTarget;
-            var touchend = function (event) {
-                var e = event || window.event;
+        that.swipeUp = function (bool) {
+            let currentTarget;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.touch.end = e.changedTouches;
                 that.date.end = Number(new Date());
                 if (
@@ -797,16 +813,15 @@ window.Dop = function() {
                 document.removeEventListener("touchend", touchend);
             };
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.touch.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -815,12 +830,15 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.touchSwipeUp = touchstart;
         };
 
-        that.swipeDown = function () {
-            var currentTarget;
-            var touchend = function (event) {
-                var e = event || window.event;
+        that.swipeDown = function (bool) {
+            let currentTarget;
+            let touchend = function (event) {
+                let e = event || window.event;
                 that.touch.end = e.changedTouches;
                 that.date.end = Number(new Date());
                 if (
@@ -837,16 +855,15 @@ window.Dop = function() {
                 document.removeEventListener("touchend", touchend);
             };
             //设置手指触发事件
-            var touchstart = function (event) {
-                var e = event || window.event;
+            let touchstart = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = [];
-                var len = e.targetTouches.length;
-                for (var i = 0; i < len; i++) {
-                    (function () {
-                        var obj = my.jquery.extend(true, {}, e.targetTouches[i]);
-                        that.touch.start.push(obj);
-                    })();
+                let len = e.targetTouches.length;
+                for (let i = 0; i < len; i++) {
+                    let obj = my.jquery.extend(true, {}, e.targetTouches[i]);
+                    that.touch.start.push(obj);
                 }
 
                 currentTarget = e;
@@ -855,6 +872,9 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("touchstart", touchstart);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.touchSwipeDown = touchstart;
         };
 
         //计算滑动的角度
@@ -885,23 +905,23 @@ window.Dop = function() {
 
     //添加pc端设备的鼠标交互事件
     this.AddComputerFun = function () {
-        var that = this;
+        let that = this;
         //默认的配置选项
         that.settings = {
             tapDurationThreshold: 250,//触屏大于这个时间不当作tap
-            scrollSupressionThreshold: 10,//触发touchmove的敏感度
+            scrollSupressionThreshold: 20,//触发touchmove的敏感度
             swipeDurationThreshold: 750,//大于这个时间不当作swipe
-            horizontalDistanceThreshold: 30,//swipe的触发垂直方向move必须小于这个距离
+            horizontalDistanceThreshold: 40,//swipe的触发垂直方向move必须大于这个距离
             verticalDistanceThreshold: 75,//swipe的触发水平方向move必须大于这个距离
             tapHoldDurationThreshold: 750,//长按触发事件需要长按这个事件才可触发
             doubleTapInterval: 250//双击事件触发中间的间隔必须小于这个时间
         };
 
-        that.init = function (dom, callback, event, callback2) {
-            that.dom = dom;
-            that.callback = callback;
+        that.init = function (obj) {
+            that.dom = obj.dom;
+            that.callback = obj.fun;
             //callback2兼容滚动事件上下两个方法的兼容
-            that.callback2 = callback2;
+            that.callback2 = obj.fun2;
 
             //时间存储
             that.date = {};
@@ -910,26 +930,27 @@ window.Dop = function() {
             //存储手指接触移动端的接触点的相关信息
             that.touch = {};
 
-            var arr = event.split(" ");
-            for (var i = 0; i < arr.length; i++) {
+            let arr = obj.event.split(",");
+            for (let i = 0; i < arr.length; i++) {
                 //监听事件
                 if (that.arr.indexOf(arr[i]) != -1) {
-                    that[arr[i]]();
+                    that[arr[i]](obj.preventDefault);
                 }
             }
         };
 
-        that.tap = function () {
+        that.tap = function (bool) {
 
-            var currentTarget;
+            let currentTarget;
 
-            var mouseUp = function (event) {
-                var e = event || window.event;
+            //手指抬起事件
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.touch.end = e;
-                that.date.end = Number(new Date());
+                that.date.end = +new Date();
                 if (
-                    (that.date.end - that.date.start <= that.settings.tapDurationThreshold) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.touch.start.clientX - that.touch.end.clientX), 2) + Math.pow(Math.abs(that.touch.start.clientY - that.touch.end.clientY), 2)) < that.settings.scrollSupressionThreshold) &&
+                    that.date.end - that.date.start <= that.settings.tapDurationThreshold &&
+                        that.getRange(that.touch.start.clientX,that.touch.start.clientY,that.touch.end.clientX,that.touch.end.clientY) < that.settings.scrollSupressionThreshold &&
                     e.button === 0
                 ) {
                     that.callback.call(that.dom, currentTarget);
@@ -937,9 +958,12 @@ window.Dop = function() {
 
                 document.removeEventListener("mouseup", mouseUp);
             };
-            //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
+
+
+            //设置手指按下事件
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
                 that.date.start = Number(new Date());
                 that.touch.start = my.jquery.extend(true, {}, e);
 
@@ -949,19 +973,23 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseTap = mouseDown;
         };
 
-        that.singleTap = function () {
-            var currentTarget;
+        that.singleTap = function (bool) {
+            let currentTarget;
             that.singleTap.timeOut = null;//预防与双击冲突的延迟器
             that.singleTap.type = false;//是否双击的标记
-            var mouseUp = function (event) {
-                var e = event || window.event;
+
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.singleTap.end = e;
-                that.singleTap.endTime = Number(new Date());
+                that.singleTap.endTime = +new Date();
                 if (
-                    (that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.singleTap.start.clientX - that.singleTap.end.clientX), 2) + Math.pow(Math.abs(that.singleTap.start.clientY - that.singleTap.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
+                    that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold &&
+                    that.getRange(that.singleTap.start.clientX,that.singleTap.start.clientY,that.singleTap.end.clientX,that.singleTap.end.clientY) < that.settings.scrollSupressionThreshold
                 ) {
                     if (that.singleTap.type) return;
                     that.singleTap.timeOut = setTimeout(function () {
@@ -971,10 +999,12 @@ window.Dop = function() {
 
                 document.removeEventListener("mouseup", mouseUp);
             };
+
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.singleTap.startTime = Number(new Date());
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.singleTap.startTime = +new Date();
                 that.singleTap.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
@@ -983,7 +1013,8 @@ window.Dop = function() {
                 if (that.singleTap.startTime - that.singleTap.endTime < that.settings.doubleTapInterval) {
                     clearTimeout(that.singleTap.timeOut);
                     that.singleTap.type = true;
-                } else {
+                }
+                else {
                     that.singleTap.type = false;
                 }
 
@@ -991,34 +1022,42 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.singleMouseTap = mouseDown;
         };
 
-        that.doubleTap = function () {
-            var currentTarget;
+        that.doubleTap = function (bool) {
+            let currentTarget;
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
-            var mouseUp = function (event) {
-                var e = event || window.event;
+
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.doubleTap.end = my.jquery.extend(true, {}, e);
-                that.doubleTap.endTime = Number(new Date());
+                that.doubleTap.endTime = +new Date();
                 if (
                     (that.doubleTap.endTime - that.doubleTap.startTime <= that.settings.tapDurationThreshold) &&
-                    (Math.sqrt(Math.pow(Math.abs(that.doubleTap.start.clientX - that.doubleTap.end.clientX), 2) + Math.pow(Math.abs(that.doubleTap.start.clientY - that.doubleTap.end.clientY), 2)) < that.settings.scrollSupressionThreshold)
+                    that.getRange(that.doubleTap.start.clientX,that.doubleTap.start.clientY,that.doubleTap.end.clientX,that.doubleTap.end.clientY) < that.settings.scrollSupressionThreshold
                 ) {
                     if (that.doubleTap.prevTime != 0 && that.doubleTap.endTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
                         that.callback.call(that.dom, currentTarget);
-                    } else {
+                    }
+                    else {
                         that.doubleTap.prevTime = that.doubleTap.endTime;
                     }
-                } else {
+                }
+                else {
                     that.doubleTap.prevTime = 0;
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
             };
+
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.doubleTap.startTime = Number(new Date());
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.doubleTap.startTime = +new Date();
                 that.doubleTap.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
@@ -1027,13 +1066,17 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.doubleMouseTap = mouseDown;
         };
 
-        that.longTap = function () {
-            var currentTarget;
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.longTap.startTime = Number(new Date());
+        that.longTap = function (bool) {
+            let currentTarget;
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.longTap.startTime = +new Date();
                 that.longTap.start = my.jquery.extend(true, {}, e);
                 that.longTap.move = null;
 
@@ -1042,10 +1085,11 @@ window.Dop = function() {
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
-                        Math.sqrt(Math.pow(Math.abs(that.longTap.start.clientX - that.longTap.move.clientX), 2) + Math.pow(Math.abs(that.longTap.start.clientY - that.longTap.move.clientY), 2)) < that.settings.scrollSupressionThreshold) {
+                        that.getRange(that.longTap.start.clientX,that.longTap.start.clientY,that.longTap.end.clientX,that.longTap.end.clientY) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
                         that.callback.call(that.dom, currentTarget);
-                    } else {
+                    }
+                    else {
                         mouseUp();
                     }
                 }, that.settings.tapHoldDurationThreshold);
@@ -1054,40 +1098,46 @@ window.Dop = function() {
                 document.addEventListener("mouseup", mouseUp);
             };
 
-            var mouseMove = function (event) {
+            let mouseMove = function (event) {
                 var e = event || window.event;
                 that.longTap.move = my.jquery.extend(true, {}, e);
             };
 
-            var mouseUp = function () {
+            let mouseUp = function () {
                 clearTimeout(that.longTap.timeOut);
                 document.removeEventListener("mousemove", mouseMove);
                 document.removeEventListener("mouseup", mouseUp);
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.longMouseTap = mouseDown;
         };
 
-        that.swipe = function () {
-            var currentTarget;
-            var mouseUp = function (event) {
-                var e = event || window.event;
-                that.touch.end = e;
-                that.date.end = Number(new Date());
+        that.swipe = function (bool) {
+            let currentTarget;
+
+            let mouseUp = function (event) {
+                let e = event || window.event;
+                that.swipe.end = e;
+                that.date.end = +new Date();
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
-                    (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold)
+                    that.getRange(that.swipe.start.clientX,that.swipe.start.clientY,that.swipe.end.clientX,that.swipe.end.clientY) > that.settings.horizontalDistanceThreshold
                 ) {
                     that.callback.call(that.dom, currentTarget);
                 }
 
                 document.removeEventListener("mouseup", mouseUp);
             };
+
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.date.start = Number(new Date());
-                that.touch.start = my.jquery.extend(true, {}, e);
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.date.start = +new Date();
+                that.swipe.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
 
@@ -1095,12 +1145,15 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseSwipe = mouseDown;
         };
 
-        that.swipeLeft = function () {
-            var currentTarget;
-            var mouseUp = function (event) {
-                var e = event || window.event;
+        that.swipeLeft = function (bool) {
+            let currentTarget;
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.touch.end = e;
                 that.date.end = Number(new Date());
                 if (
@@ -1114,10 +1167,12 @@ window.Dop = function() {
 
                 document.removeEventListener("mouseup", mouseUp);
             };
+
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.date.start = Number(new Date());
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.date.start = +new Date();
                 that.touch.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
@@ -1126,14 +1181,17 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseSwipeLeft = mouseDown;
         };
 
-        that.swipeRight = function () {
-            var currentTarget;
-            var mouseUp = function (event) {
-                var e = event || window.event;
+        that.swipeRight = function (bool) {
+            let currentTarget;
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.touch.end = e;
-                that.date.end = Number(new Date());
+                that.date.end = +new Date();
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.verticalDistanceThreshold) &&
@@ -1145,10 +1203,12 @@ window.Dop = function() {
 
                 document.removeEventListener("mouseup", mouseUp);
             };
+
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.date.start = Number(new Date());
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.date.start = +new Date();
                 that.touch.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
@@ -1157,14 +1217,18 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseSwipeRight = mouseDown;
         };
 
-        that.swipeUp = function () {
-            var currentTarget;
-            var mouseUp = function (event) {
-                var e = event || window.event;
+        that.swipeUp = function (bool) {
+            let currentTarget;
+
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.touch.end = e;
-                that.date.end = Number(new Date());
+                that.date.end = +new Date();
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold) &&
@@ -1176,10 +1240,12 @@ window.Dop = function() {
 
                 document.removeEventListener("mouseup", mouseUp);
             };
+
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.date.start = Number(new Date());
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.date.start = +new Date();
                 that.touch.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
@@ -1188,14 +1254,17 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseSwipeUp = mouseDown;
         };
 
-        that.swipeDown = function () {
-            var currentTarget;
-            var mouseUp = function (event) {
-                var e = event || window.event;
+        that.swipeDown = function (bool) {
+            let currentTarget;
+            let mouseUp = function (event) {
+                let e = event || window.event;
                 that.touch.end = e;
-                that.date.end = Number(new Date());
+                that.date.end = +new Date();
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) > that.settings.horizontalDistanceThreshold) &&
@@ -1208,9 +1277,10 @@ window.Dop = function() {
                 document.removeEventListener("mouseup", mouseUp);
             };
             //设置手指触发事件
-            var mouseDown = function (event) {
-                var e = event || window.event;
-                that.date.start = Number(new Date());
+            let mouseDown = function (event) {
+                let e = event || window.event;
+                bool && e.preventDefault();
+                that.date.start = +new Date();
                 that.touch.start = my.jquery.extend(true, {}, e);
 
                 currentTarget = e;
@@ -1219,24 +1289,31 @@ window.Dop = function() {
             };
 
             that.dom.addEventListener("mousedown", mouseDown);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseSwipeDown = mouseDown;
         };
 
-        that.wheel = function () {
-            var dom = that.dom;
-            var fun1 = that.callback;
-            var fun2 = that.callback2;
+        that.wheel = function (bool) {
+            let dom = that.dom;
+            let fun1 = that.callback;
+            let fun2 = that.callback2;
             function scroll(event) {
-                var e = event || window.event;
+                let e = event || window.event;
+                bool && e.preventDefault();
                 if (e.wheelDelta) {
                     //除了firfox浏览器，别的浏览器的处理
                     wheel(-e.wheelDelta / 120, e);
-                } else if (e.detail) {
+                }
+                else if (e.detail) {
                     //firefox浏览器的测试
                     if (e.detail === -3) {
                         wheel(-1, e);
-                    } else if (e.detail === 3) {
+                    }
+                    else if (e.detail === 3) {
                         wheel(1, e);
-                    } else {
+                    }
+                    else {
                         console.log("鼠标滚轮事件改了？", e.wheelDelta);
                     }
                 }
@@ -1247,7 +1324,8 @@ window.Dop = function() {
                         if(my.jquery.isFunction(fun1)){
                             fun1.call(dom,event);
                         }
-                    }else if(index < 0){
+                    }
+                    else if(index < 0){
                         //向上滚动
                         if(my.jquery.isFunction(fun2)){
                             fun2.call(dom,event);
@@ -1259,6 +1337,9 @@ window.Dop = function() {
             //添加监听事件
             dom.addEventListener("mousewheel",scroll,false);
             dom.addEventListener("DOMMouseScroll",scroll,false);
+
+            //将事件绑定到dom身上，供后面清除
+            that.dom.mouseScroll = scroll;
         };
 
         //计算滑动的角度
@@ -1289,12 +1370,14 @@ window.Dop = function() {
 
     //生成类似于jq的类数组对象
     this.touch = this.$ = function (dom) {
-        var touch_obj = new Object();
+        let touch_obj = {};
         if (my.isDom(dom)) {
             [].push.call(touch_obj, dom);
-        } else if (my.jquery.isArray(dom)) {
+        }
+        else if (my.jquery.isArray(dom)) {
             [].push.apply(touch_obj, dom);
-        }else if(dom.length > 0){
+        }
+        else if(dom.length > 0){
             [].push.apply(touch_obj, dom);
         }
 
