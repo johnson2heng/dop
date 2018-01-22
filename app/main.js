@@ -1447,7 +1447,12 @@ window.Dop = function () {
 
         //首先判断当前浏览器类型
         if (my.browserRedirect() !== "pc") {
-            //移动端
+            //判断是否含有function
+            if(fun && event != "move" && event != "up" && event != "wheel"){
+                dom.removeEventListener("touchstart",fun,prevent);
+                return;
+            }
+            //移动端 如果没有则清除当前dom上绑定的函数
             switch (event) {
                 case "tap":
                     dom.removeEventListener("touchstart", dom.touchTap, prevent);
@@ -1486,14 +1491,19 @@ window.Dop = function () {
                     dom.removeEventListener("touchend", fun, prevent);
                     break;
                 case "wheel":
-                    dom.addEventListener("mousewheel", dom.mouseScroll, prevent);
-                    dom.addEventListener("DOMMouseScroll", dom.mouseScroll, prevent);
+                    dom.removeEventListener("mousewheel", dom.mouseScroll, prevent);
+                    dom.removeEventListener("DOMMouseScroll", dom.mouseScroll, prevent);
                     break;
                 default:
                     dom.removeEventListener(event,fun,prevent);
             }
         }
         else {
+            //判断是否含有function
+            if(fun && event != "move" && event != "up" && event != "wheel"){
+                dom.removeEventListener("mousedown",fun,prevent);
+                return;
+            }
             //pc端
             switch (event) {
                 case "tap":
@@ -1524,8 +1534,8 @@ window.Dop = function () {
                     dom.removeEventListener("mousedown", dom.mouseSwipeDown, prevent);
                     break;
                 case "wheel":
-                    dom.addEventListener("mousewheel", dom.mouseScroll, prevent);
-                    dom.addEventListener("DOMMouseScroll", dom.mouseScroll, prevent);
+                    dom.removeEventListener("mousewheel", dom.mouseScroll, prevent);
+                    dom.removeEventListener("DOMMouseScroll", dom.mouseScroll, prevent);
                     break;
                 case "down":
                     dom.removeEventListener("mousedown", fun, prevent);
