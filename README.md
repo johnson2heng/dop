@@ -118,5 +118,6 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
     //解除绑定
     dom.remove("move",fun);
 ```
+- Dop.prototype.getFinalStyle(dom,style) //获取当前dom的最终style属性
 
 
