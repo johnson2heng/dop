@@ -1,4 +1,4 @@
-window.Dop = function() {
+window.Dop = function () {
     let my = this;
 
     //增加专用的交互事件
@@ -7,20 +7,20 @@ window.Dop = function() {
             return this.each(this, function (index, dom) {
                 if (my.browserRedirect() === "pc") {
 
-                    new my.AddComputerFun().init({dom:dom,fun:fun,event:"tap",preventDefault:preventDefault});//pc事件
+                    new my.AddComputerFun().init({dom: dom, fun: fun, event: "tap", preventDefault: preventDefault});//pc事件
                 }
                 else {
-                    new my.AddTouchFun().init({dom:dom,fun:fun,event:"tap",preventDefault:preventDefault});//移动端事件
+                    new my.AddTouchFun().init({dom: dom, fun: fun, event: "tap", preventDefault: preventDefault});//移动端事件
                 }
             });
         },
         swipe: function (fun, preventDefault) {
             return this.each(this, function (index, dom) {
                 if (my.browserRedirect() === "pc") {
-                    new my.AddComputerFun().init({dom:dom,fun:fun,event:"swipe",preventDefault:preventDefault});//pc事件
+                    new my.AddComputerFun().init({dom: dom, fun: fun, event: "swipe", preventDefault: preventDefault});//pc事件
                 }
                 else {
-                    new my.AddTouchFun().init({dom:dom,fun:fun,event:"swipe",preventDefault:preventDefault});//移动端事件
+                    new my.AddTouchFun().init({dom: dom, fun: fun, event: "swipe", preventDefault: preventDefault});//移动端事件
                 }
             });
         },
@@ -28,35 +28,41 @@ window.Dop = function() {
             //fun2 兼容鼠标滚动事件第二个事件
             return this.each(this, function (index, dom) {
                 //判断当前第三个值的类型
-                if(typeof(fun2) === "function"){
+                if (typeof(fun2) === "function") {
                     if (my.browserRedirect() === "pc") {
-                        new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//pc事件
+                        new my.AddComputerFun().init({dom: dom, fun: fun, event: event, fun2: fun2, preventDefault: preventDefault});//pc事件
                     }
-                    else  {
-                        new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault});//移动端事件
+                    else {
+                        new my.AddTouchFun().init({dom: dom, fun: fun, event: event, fun2: fun2, preventDefault: preventDefault});//移动端事件
                     }
                 }
-                else{
+                else {
                     if (my.browserRedirect() === "pc") {
-                        new my.AddComputerFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2});//pc事件
+                        new my.AddComputerFun().init({dom: dom, fun: fun, event: event, preventDefault: fun2});//pc事件
                     }
-                    else  {
-                        new my.AddTouchFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2});//移动端事件
+                    else {
+                        new my.AddTouchFun().init({dom: dom, fun: fun, event: event, preventDefault: fun2});//移动端事件
                     }
                 }
             });
         },
-        all:function(event, fun, fun2, preventDefault){
+        all: function (event, fun, fun2, preventDefault) {
             //给dom绑定pc事件和移动端事件
             return this.each(this, function (index, dom) {
-                if(typeof(fun2) === "function"){
-                    new my.AddComputerFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //pc事件
-                    new my.AddTouchFun().init({dom:dom,fun:fun,event:event,fun2:fun2,preventDefault:preventDefault}); //移动端事件
+                if (typeof(fun2) === "function") {
+                    new my.AddComputerFun().init({dom: dom, fun: fun, event: event, fun2: fun2, preventDefault: preventDefault}); //pc事件
+                    new my.AddTouchFun().init({dom: dom, fun: fun, event: event, fun2: fun2, preventDefault: preventDefault}); //移动端事件
                 }
-                else{
-                    new my.AddComputerFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2}); //pc事件
-                    new my.AddTouchFun().init({dom:dom,fun:fun,event:event,preventDefault:fun2}); //移动端事件
+                else {
+                    new my.AddComputerFun().init({dom: dom, fun: fun, event: event, preventDefault: fun2}); //pc事件
+                    new my.AddTouchFun().init({dom: dom, fun: fun, event: event, preventDefault: fun2}); //移动端事件
                 }
+            });
+        },
+        remove: function (event, fun, preventDefault) {
+            //解绑相关的事件
+            return this.each(this, function (index, dom) {
+                my.removeFun(dom, event, fun, preventDefault)
             });
         }
     };
@@ -89,7 +95,7 @@ window.Dop = function() {
             }
 
             return type === "array" || length === 0 ||
-                typeof length === "number" && length > 0 && ( length - 1 ) in obj;
+                typeof length === "number" && length > 0 && (length - 1) in obj;
         }
 
         jQuery.fn = jQuery.prototype = {};
@@ -135,7 +141,7 @@ window.Dop = function() {
                         }
 
                         // Recurse if we're merging plain objects or arrays
-                        if (deep && copy && ( jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)) )) {
+                        if (deep && copy && (jQuery.isPlainObject(copy) || (copyIsArray = jQuery.isArray(copy)))) {
                             if (copyIsArray) {
                                 copyIsArray = false;
                                 clone = src && jQuery.isArray(src) ? src : [];
@@ -456,7 +462,7 @@ window.Dop = function() {
         jQuery.extend(jquery_fun);
 
         //添加到this上面
-        for(var i in jQuery){
+        for (var i in jQuery) {
             that[i] = jQuery[i];
         }
         return jQuery;
@@ -482,7 +488,7 @@ window.Dop = function() {
             //时间存储
             that.date = {};
             //所有的可以触发的事件数组
-            that.arr = ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap'];
+            that.arr = ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap', 'down', 'move', 'up'];
             //存储手指接触移动端的接触点的相关信息
             that.touch = {};
 
@@ -500,6 +506,7 @@ window.Dop = function() {
 
         };
 
+        //点击事件
         that.tap = function (bool) {
             let currentTarget;
             let touchend = function (event) {
@@ -540,6 +547,7 @@ window.Dop = function() {
             that.dom.touchTap = touchstart;
         };
 
+        //和双击不冲突的单击事件
         that.singleTap = function (bool) {
             let currentTarget;
             that.singleTap.timeOut = null;//预防与双击冲突的延迟器
@@ -595,6 +603,7 @@ window.Dop = function() {
             that.dom.singleTouchTap = touchstart;
         };
 
+        //双击事件
         that.doubleTap = function (bool) {
             let currentTarget;
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
@@ -641,6 +650,7 @@ window.Dop = function() {
             that.dom.doubleTouchTap = touchstart;
         };
 
+        //长按事件
         that.longTap = function (bool) {
             let currentTarget;
             let mouseDown = function (event) {
@@ -655,7 +665,7 @@ window.Dop = function() {
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
-                            that.getRange(that.longTap.start.clientX, that.longTap.start.clientY, that.longTap.move.clientX, that.longTap.move.clientY)  < that.settings.scrollSupressionThreshold) {
+                        that.getRange(that.longTap.start.clientX, that.longTap.start.clientY, that.longTap.move.clientX, that.longTap.move.clientY) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
                         that.callback.call(that.dom, currentTarget);
                     }
@@ -685,6 +695,7 @@ window.Dop = function() {
             that.dom.longTouchTap = mouseDown;
         };
 
+        //滑动事件
         that.swipe = function (bool) {
             let currentTarget;
             let touchend = function (event) {
@@ -695,7 +706,7 @@ window.Dop = function() {
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
                     (that.touch.start.length === 1) &&
                     (that.touch.end.length === 1) &&
-                    that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY)  > that.settings.horizontalDistanceThreshold
+                    that.getRange(that.touch.start[0].clientX, that.touch.start[0].clientY, that.touch.end[0].clientX, that.touch.end[0].clientY) > that.settings.horizontalDistanceThreshold
                 ) {
                     that.callback.call(that.dom, currentTarget);
                 }
@@ -726,6 +737,7 @@ window.Dop = function() {
             that.dom.touchSwipe = touchstart;
         };
 
+        //向左滑动事件
         that.swipeLeft = function (bool) {
             let currentTarget;
             let touchend = function (event) {
@@ -768,6 +780,7 @@ window.Dop = function() {
             that.dom.touchSwipeLeft = touchstart;
         };
 
+        //向右滑动事件
         that.swipeRight = function (bool) {
             let currentTarget;
             let touchend = function (event) {
@@ -810,6 +823,7 @@ window.Dop = function() {
             that.dom.touchSwipeRight = touchstart;
         };
 
+        //向上滑动事件
         that.swipeUp = function (bool) {
             let currentTarget;
             let touchend = function (event) {
@@ -852,6 +866,7 @@ window.Dop = function() {
             that.dom.touchSwipeUp = touchstart;
         };
 
+        //向下滑动事件
         that.swipeDown = function (bool) {
             let currentTarget;
             let touchend = function (event) {
@@ -892,6 +907,21 @@ window.Dop = function() {
 
             //将事件绑定到dom身上，供后面清除
             that.dom.touchSwipeDown = touchstart;
+        };
+
+        //按下事件
+        that.down = function (bool) {
+            that.dom.addEventListener("touchstart", that.callback, bool);
+        };
+
+        //移动事件
+        that.move = function (bool) {
+            that.dom.addEventListener("touchmove", that.callback, bool);
+        };
+
+        //抬起事件
+        that.up = function (bool) {
+            that.dom.addEventListener("touchend", that.callback, bool);
         };
 
         //计算滑动的角度
@@ -943,7 +973,7 @@ window.Dop = function() {
             //时间存储
             that.date = {};
             //所有的可以触发的事件数组
-            that.arr = ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap', "wheel"];
+            that.arr = ['swipe', 'swipeLeft', 'swipeRight', 'swipeUp', 'swipeDown', 'doubleTap', 'tap', 'singleTap', 'longTap', "wheel", 'down', 'move', 'up'];
             //存储手指接触移动端的接触点的相关信息
             that.touch = {};
 
@@ -956,6 +986,7 @@ window.Dop = function() {
             }
         };
 
+        //点击事件
         that.tap = function (bool) {
 
             let currentTarget;
@@ -967,7 +998,7 @@ window.Dop = function() {
                 that.date.end = +new Date();
                 if (
                     that.date.end - that.date.start <= that.settings.tapDurationThreshold &&
-                        that.getRange(that.touch.start.clientX,that.touch.start.clientY,that.touch.end.clientX,that.touch.end.clientY) < that.settings.scrollSupressionThreshold &&
+                    that.getRange(that.touch.start.clientX, that.touch.start.clientY, that.touch.end.clientX, that.touch.end.clientY) < that.settings.scrollSupressionThreshold &&
                     e.button === 0
                 ) {
                     that.callback.call(that.dom, currentTarget);
@@ -995,6 +1026,7 @@ window.Dop = function() {
             that.dom.mouseTap = mouseDown;
         };
 
+        //和双击不冲突的单击事件
         that.singleTap = function (bool) {
             let currentTarget;
             that.singleTap.timeOut = null;//预防与双击冲突的延迟器
@@ -1006,7 +1038,7 @@ window.Dop = function() {
                 that.singleTap.endTime = +new Date();
                 if (
                     that.singleTap.endTime - that.singleTap.startTime <= that.settings.tapDurationThreshold &&
-                    that.getRange(that.singleTap.start.clientX,that.singleTap.start.clientY,that.singleTap.end.clientX,that.singleTap.end.clientY) < that.settings.scrollSupressionThreshold
+                    that.getRange(that.singleTap.start.clientX, that.singleTap.start.clientY, that.singleTap.end.clientX, that.singleTap.end.clientY) < that.settings.scrollSupressionThreshold
                 ) {
                     if (that.singleTap.type) return;
                     that.singleTap.timeOut = setTimeout(function () {
@@ -1044,6 +1076,7 @@ window.Dop = function() {
             that.dom.singleMouseTap = mouseDown;
         };
 
+        //双击事件
         that.doubleTap = function (bool) {
             let currentTarget;
             that.doubleTap.prevTime = 0;//定义一个记录上一次点击后鼠标抬起的时的时间变量
@@ -1054,7 +1087,7 @@ window.Dop = function() {
                 that.doubleTap.endTime = +new Date();
                 if (
                     (that.doubleTap.endTime - that.doubleTap.startTime <= that.settings.tapDurationThreshold) &&
-                    that.getRange(that.doubleTap.start.clientX,that.doubleTap.start.clientY,that.doubleTap.end.clientX,that.doubleTap.end.clientY) < that.settings.scrollSupressionThreshold
+                    that.getRange(that.doubleTap.start.clientX, that.doubleTap.start.clientY, that.doubleTap.end.clientX, that.doubleTap.end.clientY) < that.settings.scrollSupressionThreshold
                 ) {
                     if (that.doubleTap.prevTime != 0 && that.doubleTap.endTime - that.doubleTap.prevTime < that.settings.doubleTapInterval) {
                         that.callback.call(that.dom, currentTarget);
@@ -1088,6 +1121,7 @@ window.Dop = function() {
             that.dom.doubleMouseTap = mouseDown;
         };
 
+        //长按事件
         that.longTap = function (bool) {
             let currentTarget;
             let mouseDown = function (event) {
@@ -1102,7 +1136,7 @@ window.Dop = function() {
                 //设置定时器，确定长按触发的事件
                 that.longTap.timeOut = setTimeout(function () {
                     if (!that.longTap.move ||
-                        that.getRange(that.longTap.start.clientX,that.longTap.start.clientY,that.longTap.move.clientX,that.longTap.move.clientY) < that.settings.scrollSupressionThreshold) {
+                        that.getRange(that.longTap.start.clientX, that.longTap.start.clientY, that.longTap.move.clientX, that.longTap.move.clientY) < that.settings.scrollSupressionThreshold) {
                         mouseUp();
                         that.callback.call(that.dom, currentTarget);
                     }
@@ -1132,6 +1166,7 @@ window.Dop = function() {
             that.dom.longMouseTap = mouseDown;
         };
 
+        //滑动事件
         that.swipe = function (bool) {
             let currentTarget;
 
@@ -1141,7 +1176,7 @@ window.Dop = function() {
                 that.date.end = +new Date();
                 if (
                     (that.date.end - that.date.start <= that.settings.swipeDurationThreshold) &&
-                    that.getRange(that.swipe.start.clientX,that.swipe.start.clientY,that.swipe.end.clientX,that.swipe.end.clientY) > that.settings.horizontalDistanceThreshold
+                    that.getRange(that.swipe.start.clientX, that.swipe.start.clientY, that.swipe.end.clientX, that.swipe.end.clientY) > that.settings.horizontalDistanceThreshold
                 ) {
                     that.callback.call(that.dom, currentTarget);
                 }
@@ -1167,6 +1202,7 @@ window.Dop = function() {
             that.dom.mouseSwipe = mouseDown;
         };
 
+        //向左滑动事件
         that.swipeLeft = function (bool) {
             let currentTarget;
             let mouseUp = function (event) {
@@ -1203,6 +1239,7 @@ window.Dop = function() {
             that.dom.mouseSwipeLeft = mouseDown;
         };
 
+        //向右滑动事件
         that.swipeRight = function (bool) {
             let currentTarget;
             let mouseUp = function (event) {
@@ -1239,6 +1276,7 @@ window.Dop = function() {
             that.dom.mouseSwipeRight = mouseDown;
         };
 
+        //向上滑动事件
         that.swipeUp = function (bool) {
             let currentTarget;
 
@@ -1276,6 +1314,7 @@ window.Dop = function() {
             that.dom.mouseSwipeUp = mouseDown;
         };
 
+        //向下滑动事件
         that.swipeDown = function (bool) {
             let currentTarget;
             let mouseUp = function (event) {
@@ -1311,10 +1350,12 @@ window.Dop = function() {
             that.dom.mouseSwipeDown = mouseDown;
         };
 
+        //鼠标滚轮事件
         that.wheel = function (bool) {
             let dom = that.dom;
             let fun1 = that.callback;
             let fun2 = that.callback2;
+
             function scroll(event) {
                 let e = event || window.event;
                 bool && e.preventDefault();
@@ -1336,27 +1377,42 @@ window.Dop = function() {
                 }
 
                 function wheel(index, event) {
-                    if(index >= 0){
+                    if (index >= 0) {
                         //向下滚动
-                        if(my.jquery.isFunction(fun1)){
-                            fun1.call(dom,event);
+                        if (my.jquery.isFunction(fun1)) {
+                            fun1.call(dom, event);
                         }
                     }
-                    else if(index < 0){
+                    else if (index < 0) {
                         //向上滚动
-                        if(my.jquery.isFunction(fun2)){
-                            fun2.call(dom,event);
+                        if (my.jquery.isFunction(fun2)) {
+                            fun2.call(dom, event);
                         }
                     }
                 }
             }
 
             //添加监听事件
-            dom.addEventListener("mousewheel",scroll,false);
-            dom.addEventListener("DOMMouseScroll",scroll,false);
+            dom.addEventListener("mousewheel", scroll, false);
+            dom.addEventListener("DOMMouseScroll", scroll, false);
 
             //将事件绑定到dom身上，供后面清除
             that.dom.mouseScroll = scroll;
+        };
+
+        //按下事件
+        that.down = function (bool) {
+            that.dom.addEventListener("mousedown", that.callback, bool);
+        };
+
+        //移动事件
+        that.move = function (bool) {
+            that.dom.addEventListener("mousemove", that.callback, bool);
+        };
+
+        //抬起事件
+        that.up = function (bool) {
+            that.dom.addEventListener("mouseup", that.callback, bool);
         };
 
         //计算滑动的角度
@@ -1385,6 +1441,107 @@ window.Dop = function() {
         };
     };
 
+    //删除掉相关的方法的函数
+    this.removeFun = function (dom, event, fun, prevent) {
+        //dom：dom对象，event：事件，fun：清除函数，prevent：是否阻止冒泡
+
+        //首先判断当前浏览器类型
+        if (my.browserRedirect() !== "pc") {
+            //移动端
+            switch (event) {
+                case "tap":
+                    dom.removeEventListener("touchstart", dom.touchTap, prevent);
+                    break;
+                case "singleTap":
+                    dom.removeEventListener("touchstart", dom.singleTouchTap, prevent);
+                    break;
+                case "doubleTap":
+                    dom.removeEventListener("touchstart", dom.doubleTouchTap, prevent);
+                    break;
+                case "longTap":
+                    dom.removeEventListener("touchstart", dom.longTouchTap, prevent);
+                    break;
+                case "swipe":
+                    dom.removeEventListener("touchstart", dom.touchSwipe, prevent);
+                    break;
+                case "swipeLeft":
+                    dom.removeEventListener("touchstart", dom.touchSwipeLeft, prevent);
+                    break;
+                case "swipeRight":
+                    dom.removeEventListener("touchstart", dom.touchSwipeRight, prevent);
+                    break;
+                case "swipeUp":
+                    dom.removeEventListener("touchstart", dom.touchSwipeUp, prevent);
+                    break;
+                case "swipeDown":
+                    dom.removeEventListener("touchstart", dom.touchSwipeDown, prevent);
+                    break;
+                case "down":
+                    dom.removeEventListener("touchstart", fun, prevent);
+                    break;
+                case "move":
+                    dom.removeEventListener("touchmove", fun, prevent);
+                    break;
+                case "up":
+                    dom.removeEventListener("touchend", fun, prevent);
+                    break;
+                case "wheel":
+                    dom.addEventListener("mousewheel", dom.mouseScroll, prevent);
+                    dom.addEventListener("DOMMouseScroll", dom.mouseScroll, prevent);
+                    break;
+                default:
+                    dom.removeEventListener(event,fun,prevent);
+            }
+        }
+        else {
+            //pc端
+            switch (event) {
+                case "tap":
+                    dom.removeEventListener("mousedown", dom.mouseTap, prevent);
+                    break;
+                case "singleTap":
+                    dom.removeEventListener("mousedown", dom.singleMouseTap, prevent);
+                    break;
+                case "doubleTap":
+                    dom.removeEventListener("mousedown", dom.doubleMouseTap, prevent);
+                    break;
+                case "longTap":
+                    dom.removeEventListener("mousedown", dom.longMouseTap, prevent);
+                    break;
+                case "swipe":
+                    dom.removeEventListener("mousedown", dom.mouseSwipe, prevent);
+                    break;
+                case "swipeLeft":
+                    dom.removeEventListener("mousedown", dom.mouseSwipeLeft, prevent);
+                    break;
+                case "swipeRight":
+                    dom.removeEventListener("mousedown", dom.mouseSwipeRight, prevent);
+                    break;
+                case "swipeUp":
+                    dom.removeEventListener("mousedown", dom.mouseSwipeUp, prevent);
+                    break;
+                case "swipeDown":
+                    dom.removeEventListener("mousedown", dom.mouseSwipeDown, prevent);
+                    break;
+                case "wheel":
+                    dom.addEventListener("mousewheel", dom.mouseScroll, prevent);
+                    dom.addEventListener("DOMMouseScroll", dom.mouseScroll, prevent);
+                    break;
+                case "down":
+                    dom.removeEventListener("mousedown", fun, prevent);
+                    break;
+                case "move":
+                    dom.removeEventListener("mousemove", fun, prevent);
+                    break;
+                case "up":
+                    dom.removeEventListener("mouseup", fun, prevent);
+                    break;
+                default:
+                    dom.removeEventListener(event,fun,prevent);
+            }
+        }
+    };
+
     //生成类似于jq的类数组对象
     this.touch = this.$ = function (dom) {
         let touch_obj = {};
@@ -1394,8 +1551,11 @@ window.Dop = function() {
         else if (my.jquery.isArray(dom)) {
             [].push.apply(touch_obj, dom);
         }
-        else if(dom.length > 0){
+        else if (dom.length > 0) {
             [].push.apply(touch_obj, dom);
+        }
+        else{
+            [].push.call(touch_obj, dom);
         }
 
         this.jquery.extend(true, touch_obj, this.jquery, touch_fun);
@@ -1433,7 +1593,7 @@ Dop.prototype = {
         }
     },
     //使用js获取get传值
-    getQueryString:function (name) {
+    getQueryString: function (name) {
         let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         let r = window.location.search.substr(1).match(reg);
         if (r != null) return decodeURI(r[2]);
@@ -1493,7 +1653,7 @@ Dop.prototype = {
     },
     //判断是否是一个dom对象
     isDom: function (dom) {
-        var is_Dom = ( typeof HTMLElement === 'object' ) ?
+        var is_Dom = (typeof HTMLElement === 'object') ?
             function (obj) {
                 return obj instanceof HTMLElement;
             } :
@@ -1504,59 +1664,67 @@ Dop.prototype = {
     },
     //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
     wheel: function (dom, fun1, fun2) {
-        var that = this;
+        let that = this;
         //获取传入的arguments的个数
-        var argLen = arguments.length;
+        let argLen = arguments.length;
+
         function scroll(event) {
-            var e = event || window.event;
+            let e = event || window.event;
             if (e.wheelDelta) {
                 //除了firfox浏览器，别的浏览器的处理
                 wheel(-e.wheelDelta / 120, e);
-            } else if (e.detail) {
+            }
+            else if (e.detail) {
                 //firefox浏览器的测试
                 if (e.detail === -3) {
                     wheel(-1, e);
-                } else if (e.detail === 3) {
+                }
+                else if (e.detail === 3) {
                     wheel(1, e);
-                } else {
+                }
+                else {
                     console.log("鼠标滚轮事件改了？", e.wheelDelta);
                 }
             }
 
             function wheel(index, event) {
-                if(index >= 0){
+                if (index >= 0) {
                     //向下滚动
-                    if(argLen >= 2 && that.jquery.isFunction(fun1)){
-                        fun1.call(dom,event);
+                    if (argLen >= 2 && that.jquery.isFunction(fun1)) {
+                        fun1.call(dom, event);
                     }
-                }else if(index < 0){
+                }
+                else if (index < 0) {
                     //向上滚动
-                    if(argLen >= 3 && that.jquery.isFunction(fun2)){
-                        fun2.call(dom,event);
+                    if (argLen >= 3 && that.jquery.isFunction(fun2)) {
+                        fun2.call(dom, event);
                     }
                 }
             }
         }
 
         //添加监听事件
-        dom.addEventListener("mousewheel",scroll,false);
-        dom.addEventListener("DOMMouseScroll",scroll,false);
+        dom.addEventListener("mousewheel", scroll, false);
+        dom.addEventListener("DOMMouseScroll", scroll, false);
+
+        //将绑定的事件添加到dom上面
+        dom.mouseScroll = scroll;
     },
     //给img对象添加悬停效果
-    addImageHover:function(img,normal,hover){
+    addImageHover: function (img, normal, hover) {
         var imgNormal = new Image();
         var imgHover = new Image();
         imgNormal.src = normal;
         imgHover.src = hover;
-        img.addEventListener("mouseenter",function () {
+        img.addEventListener("mouseenter", function () {
             img.src = imgHover.src;
         });
-        img.addEventListener("mouseleave",function(){
+        img.addEventListener("mouseleave", function () {
             img.src = imgNormal.src;
         });
     },
     //监听数组变化方法，(arr数组,callback回调函数)
-    listenArray:function (arr,callback) {
+    listenArray: function (arr, callback) {
         // 获取Array原型
         const arrayProto = Array.prototype;
         const arrayMethods = Object.create(arrayProto);
@@ -1590,68 +1758,69 @@ Dop.prototype = {
         arr.__proto__ = newArrProto;
     },
     //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
-    listenObj:function (obj,key,callback) {
+    listenObj: function (obj, key, callback) {
         var old = obj[key];
-        Object.defineProperty(obj,key,{
-            set:function(val){
+        Object.defineProperty(obj, key, {
+            set: function (val) {
                 var oldVal = old;
                 old = val;
-                callback.call(obj,val,oldVal,this);
+                callback.call(obj, val, oldVal, this);
             },
-            get:function(){
+            get: function () {
                 return old;
             }
         });
     },
     //深度监听所有的数组和对象的方法
-    watch:function (obj,callback) {
+    watch: function (obj, callback) {
         //封装一下回调函数，如果当前对象发生变动，则直接重新监听当前的对象
         let timeout = null;
+
         function newCallback() {
             let that = this;
             clearTimeout(timeout);
             timeout = setTimeout(function () {
-                watching(that,newCallback);
+                watching(that, newCallback);
                 callback.call(that);
-            },10);
+            }, 10);
         }
 
-        var watching = function (obj,callback) {
+        var watching = function (obj, callback) {
             let that = this;
             //首先判断obj的类型
-            if(that.type(obj) === "object" && !that.isDom(obj)){
-                if(that.isArray(obj)){
-                    for(let i=0,len=obj.length; i<len; i++){
+            if (that.type(obj) === "object" && !that.isDom(obj)) {
+                if (that.isArray(obj)) {
+                    for (let i = 0, len = obj.length; i < len; i++) {
                         //给每个数组的子项增加监听
-                        that.listenObj(obj,i,callback);
+                        that.listenObj(obj, i, callback);
                         //如果子项是对象，给子项内的值增加监听
-                        if(that.type(obj) === "object"){
-                            watching(obj[i],callback);
+                        if (that.type(obj) === "object") {
+                            watching(obj[i], callback);
                         }
                     }
                     //给数组添加监听
-                    that.listenArray(obj,callback);
+                    that.listenArray(obj, callback);
                 }
-                else{
-                    for(let i in obj){
-                        if(that.type(obj) === "object"){
-                            watching(obj[i],callback);
+                else {
+                    for (let i in obj) {
+                        if (that.type(obj) === "object") {
+                            watching(obj[i], callback);
                         }
                         //给当前对象添加监听
-                        that.listenObj(obj,i,callback);
+                        that.listenObj(obj, i, callback);
                     }
                 }
             }
         }.bind(this);
 
-        watching(obj,newCallback);
+        watching(obj, newCallback);
     },
     //计算两个点之间的距离的方法
-    getRange:function (px1, py1, px2, py2) {
+    getRange: function (px1, py1, px2, py2) {
         return Math.sqrt(Math.pow(Math.abs(px1 - px2), 2) + Math.pow(Math.abs(py1 - py2), 2));
     },
     //获取dom对象的transform的相关属性的值
-    getTransformStyle(dom){
+    getTransformStyle(dom) {
         let that = this;
         //获取实际的dom的transform属性
         let style = dom.style.cssText;
@@ -1664,39 +1833,39 @@ Dop.prototype = {
         //声明一个返回的对象
         let obj = {};
 
-        if(translate){
+        if (translate) {
             obj.translate = {
-                translateX:translate[1],
-                translateY:translate[2]
+                translateX: translate[1],
+                translateY: translate[2]
             }
         }
 
-        if(scale){
+        if (scale) {
             obj.scale = {
-                scaleX:scale[1],
-                scaleY:scale[2]
+                scaleX: scale[1],
+                scaleY: scale[2]
             }
         }
 
-        if(rotate){
+        if (rotate) {
             obj.rotate = rotate[1];
         }
 
-        if(skew){
+        if (skew) {
             obj.skew = {
-                skewX:skew[1],
-                skewY:skew[2]
+                skewX: skew[1],
+                skewY: skew[2]
             }
         }
 
         return obj;
     },
     //兼容性的设置dom的transform属性
-    setTransformStyle(dom,style){
+    setTransformStyle(dom, style) {
         let that = this;
         let prefix = that.getPrefix();
 
-        switch (prefix){
+        switch (prefix) {
             case "-webkit-":
                 dom.style.webkitTransform = style;
                 break;

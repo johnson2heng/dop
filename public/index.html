@@ -30,13 +30,19 @@
 <script src="js/dop.min.js"></script>
 <script>
     let dop = new Dop();//首先实例化对象，获取到对象
-    let dom = dop.$(document.getElementById("div").querySelector("img"));//通过获取到相关dom的对象
+    let dom = dop.$(document);//通过获取到相关dom的对象
     //以下是案例，兼容ie9以上
     dom.on("tap",function () {
         console.log("tap");
         //alert("tap");
     },true);
+
+    dom.on("move",function () {
+        console.log("move");
+    });
+
     dom.on("singleTap",function () {
+        dom.remove("singleTap");
         console.log("singleTap");
     });
     dom.on("doubleTap",function () {
