@@ -51,12 +51,18 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
 - Dop.prototype.browserRedirect() //判断是什么设备的类型 返回pc pad phone
 - Dop.prototype.inDom() //判断元素内是否包含另一个元素(元素，是否包含的另一个元素)
 - Dop.prototype.getPrefix() //获取浏览器的兼容性前缀
+- Dop.prototype.getQueryString(key) //使用js获取get传值
 - Dop.prototype.isDom() //判断是否是一个dom对象
 - Dop.prototype.wheel() //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
 - Dop.prototype.addImageHover() //给img对象添加悬停效果
 - Dop.prototype.getTransformStyle(dom) //获取dom对象的transform的相关属性的值
 - Dop.prototype.setTransformStyle(dom,style) //兼容性的设置dom的transform属性
 - Dop.prototype.getRange(px1, py1, px2, py2) //计算两个点之间的距离的方法
+- Dop.prototype.getFinalStyle(dom,style) //获取当前dom的最终style属性
+- Dop.prototype.msg(value, position) //可以消失的内容提示框
+- Dop.prototype.get(url,callback, error) //get请求方法
+- Dop.prototype.post(url, data, callback, error) //post请求方法
+- Dop.prototype.objToUrl((param, key, encode) //将对象转换成url请求的格式
 
 # 特殊更新
 > 更新了现在比较流行的双向绑定，这三个函数实现了对对象的监听方法，方法兼容性待测试。
@@ -118,6 +124,5 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
     //解除绑定
     dom.remove("move",fun);
 ```
-- Dop.prototype.getFinalStyle(dom,style) //获取当前dom的最终style属性
 
 
