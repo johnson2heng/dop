@@ -30,12 +30,16 @@
 <script src="js/dop.min.js"></script>
 <script>
     let dop = new Dop();//首先实例化对象，获取到对象
-    let dom = dop.$(document);//通过获取到相关dom的对象
+    let dom = dop.$(document.querySelector("img"));//通过获取到相关dom的对象
     //以下是案例，兼容ie9以上
     dom.on("tap",function () {
         console.log("tap");
+        dop.msg("这是一个提示框","center");
         //alert("tap");
     },true);
+
+    //对象转url格式测试
+    console.log(dop.objToUrl({name:"lisi",age:34,sex:"man"}).substr(1));
 
     dom.on("move",function () {
         console.log("move");

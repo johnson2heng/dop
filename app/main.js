@@ -1577,7 +1577,7 @@ window.Dop = function () {
 Dop.prototype = {
     constructor: Dop,
     //判断是什么媒体设备的浏览器
-    browserRedirect: function () {
+    browserRedirect() {
         var sUserAgent = navigator.userAgent.toLowerCase();
         var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
         var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
@@ -1603,14 +1603,14 @@ Dop.prototype = {
         }
     },
     //使用js获取get传值
-    getQueryString: function (name) {
+    getQueryString(name) {
         let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         let r = window.location.search.substr(1).match(reg);
         if (r != null) return decodeURI(r[2]);
         return null;
     },
     //深拷贝和浅拷贝(设置,对象，深/浅)
-    cloneObj: function (settings, obj, boolean) {
+    cloneObj(settings, obj, boolean) {
         var bool = boolean || false;
         if (typeof obj != "object") {
             return;
@@ -1636,7 +1636,7 @@ Dop.prototype = {
         }
     },
     //判断元素内是否包含另一个元素(元素，是否包含的另一个元素)
-    inDom: function (dom, include) {
+    inDom(dom, include) {
         if (include && include.parentNode) {
             if (include.parentNode === dom) {
                 return true;
@@ -1650,7 +1650,7 @@ Dop.prototype = {
         }
     },
     //获取浏览器的兼容性前缀
-    getPrefix: function () {
+    getPrefix() {
         let temp = document.body;
         let aPrefix = ["webkit", "Moz", "o", "ms"];
         for (let i in aPrefix) {
@@ -1662,7 +1662,7 @@ Dop.prototype = {
         return false;
     },
     //判断是否是一个dom对象
-    isDom: function (dom) {
+    isDom(dom) {
         var is_Dom = (typeof HTMLElement === 'object') ?
             function (obj) {
                 return obj instanceof HTMLElement;
@@ -1673,7 +1673,7 @@ Dop.prototype = {
         return is_Dom(dom);
     },
     //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
-    wheel: function (dom, fun1, fun2) {
+    wheel(dom, fun1, fun2) {
         let that = this;
         //获取传入的arguments的个数
         let argLen = arguments.length;
@@ -1721,7 +1721,7 @@ Dop.prototype = {
         dom.mouseScroll = scroll;
     },
     //给img对象添加悬停效果
-    addImageHover: function (img, normal, hover) {
+    addImageHover(img, normal, hover) {
         var imgNormal = new Image();
         var imgHover = new Image();
         imgNormal.src = normal;
@@ -1734,7 +1734,7 @@ Dop.prototype = {
         });
     },
     //监听数组变化方法，(arr数组,callback回调函数)
-    listenArray: function (arr, callback) {
+    listenArray(arr, callback) {
         // 获取Array原型
         const arrayProto = Array.prototype;
         const arrayMethods = Object.create(arrayProto);
@@ -1768,7 +1768,7 @@ Dop.prototype = {
         arr.__proto__ = newArrProto;
     },
     //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
-    listenObj: function (obj, key, callback) {
+    listenObj(obj, key, callback) {
         var old = obj[key];
         Object.defineProperty(obj, key, {
             set: function (val) {
@@ -1782,7 +1782,7 @@ Dop.prototype = {
         });
     },
     //深度监听所有的数组和对象的方法
-    watch: function (obj, callback) {
+    watch(obj, callback) {
         //封装一下回调函数，如果当前对象发生变动，则直接重新监听当前的对象
         let timeout = null;
 
@@ -1826,7 +1826,7 @@ Dop.prototype = {
         watching(obj, newCallback);
     },
     //计算两个点之间的距离的方法
-    getRange: function (px1, py1, px2, py2) {
+    getRange(px1, py1, px2, py2) {
         return Math.sqrt(Math.pow(Math.abs(px1 - px2), 2) + Math.pow(Math.abs(py1 - py2), 2));
     },
     //获取dom对象的transform的相关属性的值
@@ -1892,5 +1892,106 @@ Dop.prototype = {
                 dom.style.transform = style;
                 break;
         }
+    },
+    //获取当前dom的最终style属性
+    getFinalStyle(dom,style){
+        return window.getComputedStyle(dom, null)[style];
+    },
+    //可以消失的内容提示框
+    msg(value, position){
+        //创建显示提示信息的dom
+        let div = document.createElement("div");
+        let prefix = this.getPrefix();
+        div.style.cssText = "position:fixed; height:40px; line-height:40px; color:#fff; padding:0 20px; background:rgba(0,0,0,.5);border-radius:5px; "+prefix+"transition: all .5s ease-in-out; pointer-events:none; opacity:0; left:50%; margin:auto;";
+        //判断设置的位置
+        switch (position){
+            case "top":
+                div.style.top = "200px";
+                break;
+            case "center":
+                div.style.top = 0;
+                div.style.bottom = 0;
+                break;
+            case "bottom":
+                div.style.bottom = "200px";
+                break;
+            default:
+                div.style.bottom = "200px";
+                break;
+        }
+        div.innerText = value;
+        document.body.appendChild(div);
+        //设置div居中
+        let offsetWidth = div.offsetWidth;
+        div.style.marginLeft = -offsetWidth/2+"px";
+
+        //dom加载进入设置显示的延迟
+        setTimeout(function () {
+            div.style.opacity = 1;
+        });
+
+        //设置三秒后隐藏
+        setTimeout(function () {
+            div.style.opacity = 0;
+            //过零点五秒清除掉div
+            setTimeout(function () {
+                div.parentNode.removeChild(div);
+            }, 500);
+        }, 3000);
+    },
+    //get请求方法
+    get(url,callback, error){
+        let time = +new Date();
+        let xhr = new XMLHttpRequest();
+        if(url.indexOf("?") != -1){
+            xhr.open("GET", url+"&time=" + time, true);
+        }
+        else{
+            xhr.open("GET", url+"?time=" + time, true);
+        }
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(xhr.responseText);
+            }
+        };
+        //超时
+        xhr.ontimeout = error;
+        xhr.onerror = error;
+        xhr.upload.onprogress = function(e) { };
+    },
+    //post请求方法
+    post(url, data, callback, error){
+        let time = +new Date();
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", url+"?time=" + time, true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        xhr.send(this.objToUrl(data).substr(1));
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(xhr.responseText);
+            }
+        };
+        //超时
+        xhr.ontimeout = error;
+        xhr.onerror = error;
+        xhr.upload.onprogress = function(e) { };
+    },
+    //将对象转换成url请求的格式
+    objToUrl(param, key, encode) {
+        if(param==null) return '';
+        let paramStr = '';
+        let t = typeof (param);
+        if (t == 'string' || t == 'number' || t == 'boolean') {
+            paramStr += '&' + key + '=' + ((encode==null||encode) ? encodeURIComponent(param) : param);
+        }
+        else {
+            for (let i in param) {
+                let k = key == null ? i : key + (param instanceof Array ? '[' + i + ']' : '.' + i);
+                paramStr += this.objToUrl(param[i], k, encode);
+            }
+        }
+
+        return paramStr;
     }
 };
