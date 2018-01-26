@@ -1964,7 +1964,7 @@ Dop.prototype = {
     post(url, data, callback, error){
         let time = +new Date();
         let xhr = new XMLHttpRequest();
-        xhr.open("GET", url+"?time=" + time, true);
+        xhr.open("POST", url+"?time=" + time, true);
         xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
         xhr.send(this.objToUrl(data).substr(1));
         xhr.onreadystatechange = function () {
