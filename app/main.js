@@ -956,7 +956,7 @@ window.Dop = function () {
         //默认的配置选项
         that.settings = {
             tapDurationThreshold: 250,//触屏大于这个时间不当作tap
-            scrollSupressionThreshold: 20,//触发touchmove的敏感度
+            scrollSupressionThreshold: 5,//触发touchmove的敏感度
             swipeDurationThreshold: 750,//大于这个时间不当作swipe
             horizontalDistanceThreshold: 40,//swipe的触发垂直方向move必须大于这个距离
             verticalDistanceThreshold: 75,//swipe的触发水平方向move必须大于这个距离
@@ -1949,7 +1949,6 @@ Dop.prototype = {
         else{
             xhr.open("GET", url+"?time=" + time, true);
         }
-        xhr.send();
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 callback(xhr.responseText);
@@ -1959,6 +1958,7 @@ Dop.prototype = {
         xhr.ontimeout = error;
         xhr.onerror = error;
         xhr.upload.onprogress = function(e) { };
+        xhr.send();
     },
     //post请求方法
     post(url, data, callback, error){
@@ -1966,7 +1966,6 @@ Dop.prototype = {
         let xhr = new XMLHttpRequest();
         xhr.open("POST", url+"?time=" + time, true);
         xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        xhr.send(this.objToUrl(data).substr(1));
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 callback(xhr.responseText);
@@ -1976,6 +1975,7 @@ Dop.prototype = {
         xhr.ontimeout = error;
         xhr.onerror = error;
         xhr.upload.onprogress = function(e) { };
+        xhr.send(this.objToUrl(data).substr(1));
     },
     //将对象转换成url请求的格式
     objToUrl(param, key, encode) {
