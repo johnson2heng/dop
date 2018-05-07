@@ -32,15 +32,10 @@
     let dop = new Dop();//首先实例化对象，获取到对象
     let dom = dop.$(document.querySelector("img"));//通过获取到相关dom的对象
     //以下是案例，兼容ie9以上
-    dom.on("tap",function () {
+    dom.on("tap",function (e) {
         console.log("tap");
-        dop.post("sdkljf",{name:"lasdkjfs"}, function () {
 
-        },function (a,b,c) {
-            console.log(a,b,c);
-            dop.msg("请求信息错误");
-        })
-        //alert("tap");
+        console.log(dop.positionInDom(e.clientX, e.clientY, document.querySelector("img")));
     },true);
 
     //对象转url格式测试

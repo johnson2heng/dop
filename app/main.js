@@ -1649,6 +1649,16 @@ Dop.prototype = {
             return false;
         }
     },
+    //判断鼠标的点的位置是否处于一个dom的位置范围内,x,y距离窗口左上角的client位置，dom，判断的dom
+    positionInDom(x,y,dom){
+        let box = dom.getBoundingClientRect();
+        if(x >= box.left && x <= box.right && y >= box.top && y <= box.bottom){
+            return true;
+        }
+        else{
+            return false;
+        }
+    },
     //获取浏览器的兼容性前缀
     getPrefix() {
         let temp = document.body;
@@ -1902,7 +1912,7 @@ Dop.prototype = {
         //创建显示提示信息的dom
         let div = document.createElement("div");
         let prefix = this.getPrefix();
-        div.style.cssText = "position:fixed; height:40px; line-height:40px; color:#fff; padding:0 20px; background:rgba(0,0,0,.5);border-radius:5px; "+prefix+"transition: all .5s ease-in-out; pointer-events:none; opacity:0; left:50%; margin:auto;";
+        div.style.cssText = "position:fixed; height:40px; line-height:40px; color:#fff; padding:0 20px; background:rgba(0,0,0,.5);border-radius:5px; "+prefix+"transition: all .5s ease-in-out; pointer-events:none; opacity:0; left:50%; margin:auto; z-index:9999999999999999;";
         //判断设置的位置
         switch (position){
             case "top":
@@ -1993,5 +2003,37 @@ Dop.prototype = {
         }
 
         return paramStr;
+    },
+    //设置cookie的方法
+    /**
+     * 设置cookie.
+     *
+     * @param {string} c_name cookie的键名.
+     * @param {number} value 需要添加到cookie的内容.
+     * @param {number} expiredays 可以省略，设置当前的时间.
+     * @return {null} .
+     */
+    setCookie(c_name, value, expiredays) {
+        let exdate = new Date();
+        exdate.setTime(Number(exdate) + expiredays);
+        document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    },
+    /*
+    * 获取设置的cookie的内容
+    *
+    * @param {string} c_name cookie的键名
+    * @return {string} 返回获取到的内容，如果没有返回空字符串
+    * */
+    getCookie(c_name) {
+        if(document.cookie.length > 0) {
+            let c_start = document.cookie.indexOf(c_name + "=");//获取字符串的起点
+            if(c_start != -1) {
+                c_start = c_start + c_name.length + 1;//获取值的起点
+                let c_end = document.cookie.indexOf(";", c_start);//获取结尾处
+                if(c_end == -1) c_end = document.cookie.length;//如果是最后一个，结尾就是cookie字符串的结尾
+                return decodeURI(document.cookie.substring(c_start, c_end));//截取字符串返回
+            }
+        }
+        return "";
     }
 };
