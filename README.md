@@ -49,9 +49,11 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
 > 个人新增
 
 - Dop.prototype.browserRedirect() //判断是什么设备的类型 返回pc pad phone
-- Dop.prototype.inDom() //判断元素内是否包含另一个元素(元素，是否包含的另一个元素)
-- Dop.prototype.getPrefix() //获取浏览器的兼容性前缀
 - Dop.prototype.getQueryString(key) //使用js获取get传值
+- Dop.prototype.cloneObj(settings, obj, boolean) //深拷贝和浅拷贝(设置,对象，深/浅)
+- Dop.prototype.inDom() //判断元素内是否包含另一个元素(元素，是否包含的另一个元素)
+- Dop.prototype.positionInDom(x,y,dom) //判断鼠标的点的位置是否处于一个dom的位置范围内,x,y距离窗口左上角的client位置，dom，判断的dom
+- Dop.prototype.getPrefix() //获取浏览器的兼容性前缀
 - Dop.prototype.isDom() //判断是否是一个dom对象
 - Dop.prototype.wheel() //鼠标上下滚轮事件(绑定的dom对象，向下滚动触发事件，向上滚动触发事件）
 - Dop.prototype.addImageHover() //给img对象添加悬停效果

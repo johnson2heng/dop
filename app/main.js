@@ -1,4 +1,4 @@
-window.Dop = function () {
+function Dop() {
     let my = this;
 
     //增加专用的交互事件
@@ -2045,3 +2045,5 @@ Dop.prototype = {
         return lg;
     }
 };
+
+window.Dop = Dop;
