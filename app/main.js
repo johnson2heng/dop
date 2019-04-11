@@ -2035,5 +2035,13 @@ Dop.prototype = {
             }
         }
         return "";
+    },
+    /*获取当前浏览器语言
+    * @return {str} 当前浏览器的语言 cn en jp
+    * */
+    getLanguage: function () {
+        var nl = navigator.language;
+        var lg = (nl === "zh-CN" || nl === "zh-cn") ? "cn" : (nl === "ja") ? "jp" : "en";
+        return lg;
     }
 };
