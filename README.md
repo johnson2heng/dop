@@ -126,5 +126,28 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
     //解除绑定
     dom.remove("move",fun);
 ```
+### 20191021 更新
+> 增加获取唯一标识符方法generateUUID，增加创建dom的方法createElement
+
+- createElement事件
+```
+    var dop = new Dop();
+    dop.createElement({
+        tagName: 'div', //当前dom的标签
+        id: 'id', //当前dom的id
+        className: 'className', //当前标签的class名称
+        parentNode：document.body, //当前dom的父元素
+        style:{ //设置dom的style样式
+            display: 'none',
+            marginLeft: '10px'
+        }, 
+        on:{ //兼容dop的事件绑定，直接可以书写到dom内
+            tap: function(){
+                alert('触发点击事件');
+            }
+        }
+    });
+```
+createElement事件增加初衷是为了能够简化代码，能够将一个dom对象的相关内容全部书写到一块，达到代码简洁一目了然的目的。
 
 
