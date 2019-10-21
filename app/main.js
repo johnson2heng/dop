@@ -2043,7 +2043,56 @@ Dop.prototype = {
         var nl = navigator.language;
         var lg = (nl === "zh-CN" || nl === "zh-cn") ? "cn" : (nl === "ja") ? "jp" : "en";
         return lg;
+    },
+    /*获取到唯一标识符*/
+    generateUUID: function () {
+        var lut = [];
+        for (var i = 0; i < 256; i++) {
+            lut[i] = (i < 16 ? '0' : '') + (i).toString(16);
+        }
+
+        var d0 = Math.random() * 0xffffffff | 0;
+        var d1 = Math.random() * 0xffffffff | 0;
+        var d2 = Math.random() * 0xffffffff | 0;
+        var d3 = Math.random() * 0xffffffff | 0;
+        var uuid = lut[d0 & 0xff] + lut[d0 >> 8 & 0xff] + lut[d0 >> 16 & 0xff] + lut[d0 >> 24 & 0xff] + '-' +
+            lut[d1 & 0xff] + lut[d1 >> 8 & 0xff] + '-' + lut[d1 >> 16 & 0x0f | 0x40] + lut[d1 >> 24 & 0xff] + '-' +
+            lut[d2 & 0x3f | 0x80] + lut[d2 >> 8 & 0xff] + '-' + lut[d2 >> 16 & 0xff] + lut[d2 >> 24 & 0xff] +
+            lut[d3 & 0xff] + lut[d3 >> 8 & 0xff] + lut[d3 >> 16 & 0xff] + lut[d3 >> 24 & 0xff];
+
+        // .toUpperCase() here flattens concatenated strings to save heap memory space.
+        return uuid.toUpperCase();
+
     }
+};
+
+//创建dom对象
+Dop.prototype.createElement = function (options) {
+    const dom = document.createElement(options.tagName || 'div');
+    for (let key in options) {
+        switch (key) {
+            case 'tagName':
+                //无法覆盖tagName
+                break;
+            case 'parentNode':
+                options[key].appendChild(dom);
+                break;
+            case 'style':
+                for (let key in options['style']) {
+                    dom.style[key] = options['style'][key];
+                }
+                break;
+            case 'on':
+                for (let item in options[key]) {
+                    Dop.getInstance().$(dom).on(item, options[key][item]);
+                }
+                break;
+            default:
+                dom[key] = options[key];
+        }
+    }
+
+    return dom;
 };
 
 window.Dop = Dop;
