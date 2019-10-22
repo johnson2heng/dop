@@ -2096,3 +2096,4 @@ Dop.prototype.createElement = function (options) {
 };
 
 window.Dop = Dop;
+"object"===typeof module&&(module.exports=Dop);
