@@ -2084,7 +2084,7 @@ Dop.prototype.createElement = function (options) {
                 break;
             case 'on':
                 for (let item in options[key]) {
-                    Dop.getInstance().$(dom).on(item, options[key][item]);
+                    this.$(dom).on(item, options[key][item]);
                 }
                 break;
             default:
