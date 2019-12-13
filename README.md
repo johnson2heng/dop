@@ -20,7 +20,17 @@ touch()函数内可以传入的值，dom对象，一个数组dom对象，jq对�
         console.log("tap");
     });
 ```
->支持的方法：tap（点击事件），singleTap（一次点击事件，如果触发双击，此事件不会触发），doubleTap（双击事件），swipe（滑动事件），longTap（长按事件），swipeLeft（左划事件），swipeRight（右划事件），swipeUp（上划事件），swipeDown（下划事件），wheel（鼠标滚动事件，pc端）
+>支持的方法：
+tap（点击事件），
+singleTap（一次点击事件，如果触发双击，此事件不会触发），
+doubleTap（双击事件），
+swipe（滑动事件），
+longTap（长按事件），
+swipeLeft（左划事件），
+swipeRight（右划事件），
+swipeUp（上划事件），
+swipeDown（下划事件），
+wheel（鼠标滚动事件，pc端）
 >pc端的滚动事件可以传入两个function，第一个为往下滚动，第二个为往上滚动。
 
 # 封装的其它方法
