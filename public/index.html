@@ -1,76 +1,102 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="renderer" content="webkit">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
     <style>
-        *{
-            margin:0;
-            padding:0;
+        * {
+            margin: 0;
+            padding: 0;
         }
-        #div{
-            margin:0 auto; height:400px; width:100%; background: greenyellow;
+
+        html,body{
+            overflow: hidden;
+        }
+
+        #div {
+            margin: 0 auto;
+            height: 400px;
+            width: 100%;
+            background: greenyellow;
         }
     </style>
+    <script src="js/dop.min.js"></script>
 </head>
 <body>
-生成的文件在/public/js/文件内，压缩的文件为dop.min.js。源文件为/app/main.js
+生成的文件在/public/js/文件内，压缩的文件为js/dop.min.js。源文件为../app/main.js
 <div id="div">
-    <div style="width:400px; height:200px; background: red; margin:0 auto;" >
+    <div style="width:400px; height:200px; background: red; margin:0 auto;">
         <img src="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo_top_ca79a146.png" alt="" style="width: 100%; height:100%;">
     </div>
 </div>
-</body>
-<script src="js/dop.min.js"></script>
 <script>
     let dop = new Dop();//首先实例化对象，获取到对象
     let dom = dop.$(document.querySelector("img"));//通过获取到相关dom的对象
     //以下是案例，兼容ie9以上
-    dom.on("tap",function (e) {
+    dom.on("tap", function (e) {
         console.log("tap");
-
         console.log(dop.positionInDom(e.clientX, e.clientY, document.querySelector("img")));
-    },true);
-
+    }, true);
     //对象转url格式测试
-    console.log(dop.objToUrl({name:"lisi",age:34,sex:"man"}).substr(1));
+    console.log(dop.objToUrl({name: "name", age: 34, sex: "man"}).substr(1));
 
-    dom.on("singleTap",function () {
+    // down move 和up事件必须指定函数才可以清除事件绑定
+    dom.on("down", function () {
+        dom.remove("down");
+        console.log("down");
+    });
+    dom.on("move", function () {
+        dom.remove("move");
+        console.log("move");
+    });
+    dom.on("up", function () {
+        dom.remove("up");
+        console.log("up");
+    });
+    dom.on("singleTap", function () {
         dom.remove("singleTap");
         console.log("singleTap");
     });
-    dom.on("doubleTap",function () {
+    dom.on("doubleTap", function () {
         console.log("doubleTap");
+        dom.remove("doubleTap");
     });
-    dom.on("swipe",function () {
-        console.log("swipe");
-        //alert("swipe");
-    });
-    dom.on("longTap",function () {
+    dom.on("longTap", function () {
         console.log("longTap");
+        dom.remove("longTap");
     });
-    dom.on("swipeLeft",function () {
+    dom.on("swipe", function () {
+        console.log("swipe");
+        dom.remove("swipe");
+    });
+    dom.on("swipeLeft", function () {
         console.log("swipeLeft");
+        dom.remove("swipeLeft");
     });
-    dom.on("swipeRight",function () {
+    dom.on("swipeRight", function () {
         console.log("swipeRight");
+        dom.remove("swipeRight");
     });
-    dom.on("swipeUp",function () {
+    dom.on("swipeUp", function () {
         console.log("swipeUp");
+        dom.remove("swipeUp");
     });
-    dom.on("swipeDown",function () {
+    dom.on("swipeDown", function () {
         console.log("swipeDown");
+        dom.remove("swipeDown");
     });
-    dom.on("wheel",function () {
+    dom.on("wheel", function () {
         console.log("向下滚动");
-    },function () {
+    }, function () {
         console.log("向上滚动");
-    },true);
+    }, true);
+
+    setTimeout(function () {
+        dom.remove('wheel');
+        console.log('取消掉滚动事件');
+    }, 3000);
 </script>
+</body>
 </html>

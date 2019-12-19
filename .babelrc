@@ -1,3 +1,8 @@
 {
-    "presets": ["es2015","react"]
+    "plugins": [
+        "@babel/plugin-proposal-optional-chaining"
+    ],
+    "presets": [
+        "@babel/preset-env"
+    ]
 }

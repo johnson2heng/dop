@@ -15,43 +15,40 @@ module.exports = {
             {
                 test: /(\.jsx|\.js)$/,
                 use: {
-                    loader: "babel-loader",
-                    options:{
-                        presets: ['es2015']
-                    }
+                    loader: "babel-loader"
                 },
                 exclude: /node_modules/
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use:[
-                        {
-                            loader: "css-loader"
-                        },
-                        {
-                            loader: 'postcss-loader'
-                        }
-                    ]
-                })
+                use:[
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader"
+                    },
+                    {
+                        loader: 'postcss-loader'
+                    }
+                ]
             },
             {
                 test: /\.less$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use:[
-                        {
-                            loader: "css-loader"
-                        },
-                        {
-                            loader: 'postcss-loader'
-                        },
-                        {
-                            loader: "less-loader"
-                        }
-                    ]
-                })
+                use:[
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader"
+                    },
+                    {
+                        loader: 'postcss-loader'
+                    },
+                    {
+                        loader: "less-loader"
+                    }
+                ]
             },
             {
                 test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -64,7 +61,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(eot|woff|svg|ttf|woff2|gif)(\?|$)/,
+                test: /\.(eot|woff|ttf|woff2)(\?|$)/,
                 use: {
                     loader: 'file-loader',
                     options: {
@@ -78,12 +75,8 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin('nan出品，必出精品'), //文件自动添加内容
         //js 压缩混淆代码
-        new UglifyJsPlugin({
-            uglifyOptions:{
-                mangle:false
-            }
-        }),
+        new UglifyJsPlugin(),
         //css文件配置
-        new ExtractTextPlugin(config.cssPath),
+        new ExtractTextPlugin(config.cssPath)
     ],
 };
