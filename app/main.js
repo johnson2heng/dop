@@ -599,6 +599,7 @@ class Dop {
 
     //监听对象的值的改变的方法（obj对象，key键名，callback回调函数)
     listenObj(obj, key, callback) {
+        //console.log(obj);
         let old = obj[key];
         Object.defineProperty(obj, key, {
             set: function (val) {
@@ -1005,8 +1006,9 @@ class Touch extends Dop {
             down: {},
             move: {},
             up: {},
-        }
+        };
 
+        console.log(this.domArr);
 
         //默认的配置选项
         this.settings = {
@@ -1113,7 +1115,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.end = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1126,7 +1128,7 @@ class Touch extends Dop {
                 date.end - date.start <= this.settings.tapDurationThreshold &&
                 this.getEventRange(touch.start, touch.end) < this.settings.scrollSupressionThreshold
             ) {
-                callback.call(e.target, currentTarget);
+                callback.call(currentTarget.target, currentTarget);
             }
         };
 
@@ -1138,7 +1140,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1163,7 +1165,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.endTime = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1178,7 +1180,7 @@ class Touch extends Dop {
             ) {
                 if (type) return;
                 timeOut = setTimeout(function () {
-                    callback.call(e.target, currentTarget);
+                    callback.call(currentTarget.target, currentTarget);
                 }, this.settings.doubleTapInterval);
             }
         };
@@ -1200,7 +1202,7 @@ class Touch extends Dop {
                 type = false;
             }
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1222,7 +1224,7 @@ class Touch extends Dop {
             e.preventDefault();
             touch.end = isPc ? e : e.changedTouches;
             date.endTime = +new Date();
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1237,7 +1239,7 @@ class Touch extends Dop {
                 this.getEventRange(touch.start, touch.end) < this.settings.scrollSupressionThreshold
             ) {
                 if (date.prevTime !== 0 && date.endTime - date.prevTime < this.settings.doubleTapInterval) {
-                    callback.call(e.target, currentTarget);
+                    callback.call(currentTarget.target, currentTarget);
                 }
                 else {
                     date.prevTime = date.endTime;
@@ -1256,7 +1258,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1303,7 +1305,7 @@ class Touch extends Dop {
                 if (!touch.move ||
                     this.getEventRange(touch.start, touch.move) < this.settings.scrollSupressionThreshold
                 ) {
-                    callback.call(e.target, currentTarget);
+                    callback.call(currentTarget.target, currentTarget);
                 }
             }, this.settings.tapHoldDurationThreshold);
 
@@ -1329,7 +1331,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.end = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1342,7 +1344,7 @@ class Touch extends Dop {
                 (date.end - date.start <= this.settings.swipeDurationThreshold) &&
                 this.getEventRange(touch.start, touch.end) > this.settings.horizontalDistanceThreshold
             ) {
-                callback.call(e.target, currentTarget);
+                callback.call(currentTarget.target, currentTarget);
             }
         };
 
@@ -1354,7 +1356,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1375,7 +1377,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.end = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1389,7 +1391,7 @@ class Touch extends Dop {
                 this.getEventRange(touch.start, touch.end) > this.settings.verticalDistanceThreshold &&
                 (this.getEventAngle(touch.start, touch.end) >= 135 || this.getEventAngle(touch.start, touch.end) <= -135)
             ) {
-                callback.call(e.target, currentTarget);
+                callback.call(currentTarget.target, currentTarget);
             }
         };
 
@@ -1401,7 +1403,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1422,7 +1424,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.end = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1436,7 +1438,7 @@ class Touch extends Dop {
                 this.getEventRange(touch.start, touch.end) > this.settings.verticalDistanceThreshold &&
                 (this.getEventAngle(touch.start, touch.end) >= -45 && this.getEventAngle(touch.start, touch.end) <= 45)
             ) {
-                callback.call(e.target, currentTarget);
+                callback.call(currentTarget.target, currentTarget);
             }
         };
 
@@ -1448,7 +1450,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1469,7 +1471,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.end = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1483,7 +1485,7 @@ class Touch extends Dop {
                 this.getEventRange(touch.start, touch.end) > this.settings.verticalDistanceThreshold &&
                 (this.getEventAngle(touch.start, touch.end) > -135 && this.getEventAngle(touch.start, touch.end) < -45)
             ) {
-                callback.call(e.target, currentTarget);
+                callback.call(currentTarget.target, currentTarget);
             }
         };
 
@@ -1495,7 +1497,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1516,7 +1518,7 @@ class Touch extends Dop {
             touch.end = isPc ? e : e.changedTouches;
             date.end = +new Date();
             //取消抬起事件绑定
-            e.target.removeEventListener(this.getUpKey(), mouseUp, bool);
+            document.removeEventListener(this.getUpKey(), mouseUp, bool);
 
             //判断是否是移动端
             if (!isPc) {
@@ -1530,7 +1532,7 @@ class Touch extends Dop {
                 this.getEventRange(touch.start, touch.end) > this.settings.verticalDistanceThreshold &&
                 (this.getEventAngle(touch.start, touch.end) > 45 && this.getEventAngle(touch.start, touch.end) < 135)
             ) {
-                callback.call(e.target, currentTarget);
+                callback.call(currentTarget.target, currentTarget);
             }
         };
 
@@ -1542,7 +1544,7 @@ class Touch extends Dop {
             touch.start = isPc ? e : e.touches;
             currentTarget = e;
 
-            e.target.addEventListener(this.getUpKey(), mouseUp, bool);
+            document.addEventListener(this.getUpKey(), mouseUp, bool);
         };
 
         this.down(mouseDown, bool, false);
@@ -1601,6 +1603,7 @@ class Touch extends Dop {
 
     //按下事件 callback 事件触发回调  bool 是否在捕获阶段执行，默认true   removeAll  是否在调用删除当前全部事件中清除当前事件 默认true
     down(callback, bool = true, removeAll = true) {
+        console.log(this.domArr, callback);
         this.domArr.forEach((dom, index) => {
             dom.addEventListener(this.getDownKey(), callback, bool);
         });
@@ -1685,7 +1688,6 @@ class Touch extends Dop {
         }
     }
 }
-
 
 window.Dop = Dop;
 "object" === typeof module && (module.exports = Dop);
