@@ -491,6 +491,19 @@ class Dop {
         return false;
     }
 
+
+    //只运行一次函数生成器
+    once(fn) {
+        let result;
+        return function () {
+            if (fn) {
+                result = fn.apply(this, arguments);
+                fn = null;
+            }
+            return result;
+        };
+    };
+
     //判断是否是一个dom对象
     isDom(dom) {
         var is_Dom = (typeof HTMLElement === 'object') ?
@@ -945,6 +958,13 @@ class Dop {
 
         return dom;
     }
+
+    static getInstance(){
+        if(!this.instance){
+            this.instance = new Dop();
+        }
+        return this.instance;
+    }
 }
 
 //原生的一些方法引用
@@ -1007,8 +1027,6 @@ class Touch extends Dop {
             move: {},
             up: {},
         };
-
-        console.log(this.domArr);
 
         //默认的配置选项
         this.settings = {
@@ -1603,7 +1621,6 @@ class Touch extends Dop {
 
     //按下事件 callback 事件触发回调  bool 是否在捕获阶段执行，默认true   removeAll  是否在调用删除当前全部事件中清除当前事件 默认true
     down(callback, bool = true, removeAll = true) {
-        console.log(this.domArr, callback);
         this.domArr.forEach((dom, index) => {
             dom.addEventListener(this.getDownKey(), callback, bool);
         });
@@ -1691,3 +1708,4 @@ class Touch extends Dop {
 
 window.Dop = Dop;
 "object" === typeof module && (module.exports = Dop);
+
