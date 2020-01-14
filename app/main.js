@@ -396,10 +396,10 @@ class Dop {
             if (bIsIpad) {
                 return "pad";
             }
-            else if (document.body.clientWidth > 767 && document.body.clientHeight > 767) {
+            else if (window.innerWidth > 767 && window.innerWidth > 767) {
                 return "pad";
             }
-            else if (document.body.clientWidth < 400 || document.body.clientHeight < 400) {
+            else if (window.innerWidth < 400 || window.innerWidth < 400) {
                 return "phone";//小于320的minphone 暂时修改成phone
             }
             else {
