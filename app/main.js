@@ -396,10 +396,10 @@ class Dop {
             if (bIsIpad) {
                 return "pad";
             }
-            else if (window.innerWidth > 767 && window.innerWidth > 767) {
+            else if (window.innerWidth > 767 && window.innerHeight > 767) {
                 return "pad";
             }
-            else if (window.innerWidth < 400 || window.innerWidth < 400) {
+            else if (window.innerWidth < 400 || window.innerHeight < 400) {
                 return "phone";//小于320的minphone 暂时修改成phone
             }
             else {
@@ -490,7 +490,6 @@ class Dop {
         }
         return false;
     }
-
 
     //只运行一次函数生成器
     once(fn) {
